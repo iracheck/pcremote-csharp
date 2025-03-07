@@ -8,6 +8,7 @@ using SharpDX.XInput;
 using WindowsInput;
 using WindowsInput.Native;
 using ControllerToMouse.src.Utils;
+using SharpDX.Mathematics.Interop;
 
 namespace ControllerToMouse.src.Backend
 {
@@ -21,20 +22,25 @@ namespace ControllerToMouse.src.Backend
         IMouseSimulator mouse;
         IKeyboardSimulator keyboard;
 
+        DateTime now = DateTime.Now;
+        DateTime lastAction = DateTime.Now;
+
 
         // Values
         private float mouseSpeed;
 
 
         // Constants
-        private const float MAX_MOUSE_SPEED = 13.0f;
+        private const float MAX_MOUSE_SPEED = 2f;
         
 
 
         public InputDevice()
         {
-            controller = new Controller();
+            Console.WriteLine("Creating new input device...");
+            controller = new Controller(UserIndex.One);
             simulator = new InputSimulator();
+            Console.WriteLine(controller.UserIndex.ToString());
 
             keyboard = simulator.Keyboard;
             mouse = simulator.Mouse;
@@ -46,6 +52,8 @@ namespace ControllerToMouse.src.Backend
             if (controller.IsConnected)
             {
                 status = controller.GetState().Gamepad;
+                handleMouseMovement();
+                handleScrolling();
                 return 1;
             }
             return 0;
@@ -53,15 +61,17 @@ namespace ControllerToMouse.src.Backend
 
         void handleMouseMovement()
         {
-            int lx = status.LeftThumbX;
-            int ly = status.LeftThumbY;
+            int lx = status.LeftThumbX / 1000; 
+            int ly = status.LeftThumbY / 1000;
+
 
             if (lx != 0 || ly != 0)
             {
-                int curX = MouseUtils.GetMousePos().x;
-                int curY = MouseUtils.GetMousePos().y;
+                lx = (int)(lx * mouseSpeed); // Must divide by a large number, as raw controller input provides a very large number
+                ly = (int)(ly * mouseSpeed) * -1;
 
                 updateMouseSpeed(1);
+                Console.WriteLine(lx + " " + ly);
 
                 mouse.MoveMouseBy(lx, ly);
             }
@@ -78,27 +88,28 @@ namespace ControllerToMouse.src.Backend
         // -1 -> max speed
         float updateMouseSpeed(int state)
         {
-            float accelerationMultiplier = 0.25f; // At what percent of the max speed does the mouse accelerate by per frame
+            float accelerationMultiplier = 1.0f / 13.0f; // This is an arbitrary number that slows down the speed of the mouse acceleration, to allow precise movement.
 
-            if (state == 0)
+            if (state == 0) // reset
             {
                 mouseSpeed = 0f;
             }
-            else if (state == 1)
+            else if (state == 1) // accelerate
             {
                 mouseSpeed = (MAX_MOUSE_SPEED - mouseSpeed) * accelerationMultiplier;
             }
-            else if (state == -1)
+            else if (state == -1) // max speed
             {
                 mouseSpeed = MAX_MOUSE_SPEED;
             }
             return mouseSpeed;
         }
 
+
         void handleScrolling()
         {
-            int rx = status.LeftThumbX;
-            int ry = status.LeftThumbY;
+            int rx = status.RightThumbX; 
+            int ry = status.RightThumbY;
 
             if (ry != 0.0)
             {
@@ -110,7 +121,20 @@ namespace ControllerToMouse.src.Backend
             }
         }
 
+        //void handleControllerSleepMode()
+        //{
+        //    Timer currentTime 
+        //}
+
         //int rx = status.RightThumbX;
         //int ry = status.RightThumbY;
+
+
+
+        float getMouseSpeed()
+        {
+            return mouseSpeed;
+        }
     }
+
 }

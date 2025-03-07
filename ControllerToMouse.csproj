@@ -52,10 +52,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Backend\InputDeviceManager.cs" />
     <Compile Include="Source\Backend\InputDevice.cs" />
     <Compile Include="Source\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Utils\DeltaTime.cs" />
     <Compile Include="Source\Utils\MouseUtils.cs" />
   </ItemGroup>
   <ItemGroup>

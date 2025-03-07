@@ -12,16 +12,31 @@
 # Ignore build artifacts
 bin/
 obj/
+bin/Debug/
+bin/Release/
+obj/Debug/
+obj/Release/
 *.dll
 *.exe
 *.pdb
 
 # Ignore Rider settings
 *.iml
-.idea/
 *.ipr
 *.iws
 out/
 
+# Ignore NuGet packages
+packages/
+*.nupkg
+
 # Ignore user-specific files
 *.userprefs
+
+# Ignore temporary & backup files
+*.tmp
+*.bak
+
+# Ignore system files
+Thumbs.db
+.DS_Store

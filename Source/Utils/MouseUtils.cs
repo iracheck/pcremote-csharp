@@ -38,7 +38,7 @@ namespace ControllerToMouse.src.Utils
             }
             else
             {
-                Console.WriteLine("[ERROR > MOUSE] Could not find mouse location. Setting to default (0,0).");
+                Console.WriteLine("[ERROR @ MouseUtils] Could not find mouse location. Setting to default (0,0).");
                 point.x = 0;
                 point.y = 0;
                 return point;

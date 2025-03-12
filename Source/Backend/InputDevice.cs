@@ -25,14 +25,19 @@ namespace ControllerToMouse.src.Backend
         DateTime now = DateTime.Now;
         DateTime lastAction = DateTime.Now;
 
+        private bool controllerActive;
+        private bool leftClickDown = false;
+        private bool rightClickDown = false;
+        private bool middleClickDown = false;
+
 
         // Values
         private float mouseSpeed;
 
 
         // Constants
-        private const float MAX_MOUSE_SPEED = 2f;
-        
+        private const float MAX_MOUSE_SPEED = 1.0f;
+
 
 
         public InputDevice()
@@ -40,7 +45,6 @@ namespace ControllerToMouse.src.Backend
             Console.WriteLine("Creating new input device...");
             controller = new Controller(UserIndex.One);
             simulator = new InputSimulator();
-            Console.WriteLine(controller.UserIndex.ToString());
 
             keyboard = simulator.Keyboard;
             mouse = simulator.Mouse;
@@ -54,24 +58,30 @@ namespace ControllerToMouse.src.Backend
                 status = controller.GetState().Gamepad;
                 handleMouseMovement();
                 handleScrolling();
+                handleMouseClicks();
                 return 1;
+            }
+            else
+            {
+                Console.WriteLine("Controller disconnected.");
             }
             return 0;
         }
 
+        // Handles all mouse movements
         void handleMouseMovement()
         {
-            int lx = status.LeftThumbX / 1000; 
+            int lx = status.LeftThumbX / 1000; // Must divide by a large number, as raw controller input provides a very large number. Returns num pixels to move by
             int ly = status.LeftThumbY / 1000;
 
 
             if (lx != 0 || ly != 0)
             {
-                lx = (int)(lx * mouseSpeed); // Must divide by a large number, as raw controller input provides a very large number
-                ly = (int)(ly * mouseSpeed) * -1;
-
                 updateMouseSpeed(1);
-                Console.WriteLine(lx + " " + ly);
+                setActive();
+
+                lx = (int)(lx * mouseSpeed);
+                ly = (int)(ly * mouseSpeed) * -1;
 
                 mouse.MoveMouseBy(lx, ly);
             }
@@ -88,7 +98,7 @@ namespace ControllerToMouse.src.Backend
         // -1 -> max speed
         float updateMouseSpeed(int state)
         {
-            float accelerationMultiplier = 1.0f / 13.0f; // This is an arbitrary number that slows down the speed of the mouse acceleration, to allow precise movement.
+            float accelerationMultiplier = 1.0f / 20f; // This is an arbitrary number that slows down the speed of the mouse acceleration, to allow precise movement.
 
             if (state == 0) // reset
             {
@@ -96,45 +106,150 @@ namespace ControllerToMouse.src.Backend
             }
             else if (state == 1) // accelerate
             {
-                mouseSpeed = (MAX_MOUSE_SPEED - mouseSpeed) * accelerationMultiplier;
+                mouseSpeed += (MAX_MOUSE_SPEED - mouseSpeed) * accelerationMultiplier;
             }
             else if (state == -1) // max speed
             {
                 mouseSpeed = MAX_MOUSE_SPEED;
             }
+            Console.WriteLine("Current speed: " + mouseSpeed);
             return mouseSpeed;
         }
 
 
+        // Handles scrolling
         void handleScrolling()
         {
-            int rx = status.RightThumbX; 
-            int ry = status.RightThumbY;
+            int rx = getRightStickXRaw();
+            int ry = getRightStickYRaw();
 
-            if (ry != 0.0)
+            if (rx != 0 || ry != 0)
             {
-                mouse.VerticalScroll(ry);
-            }
-            else if (rx != 0.0)
-            {
-                mouse.HorizontalScroll(rx);
+                setActive();
+                if (ry != 0.0) mouse.VerticalScroll(ry);
+                if (rx != 0.0) mouse.HorizontalScroll(rx);
             }
         }
 
-        //void handleControllerSleepMode()
-        //{
-        //    Timer currentTime 
-        //}
+        void handleMouseClicks()
+        {
+            bool leftClick = status.LeftTrigger > 0;
+            bool rightClick = status.RightTrigger > 0;
+            bool middleClick = leftClick && rightClick;
 
-        //int rx = status.RightThumbX;
-        //int ry = status.RightThumbY;
+            if (leftClick || rightClick) setActive();
+
+            if (middleClick)
+            {
+                mouse.XButtonDown(3);
+
+                return;
+            }
+            else if (middleClick & !middleClickDown)
+            {
+                mouse.XButtonUp(1);
+            }
+
+            if (leftClick && !leftClickDown)
+            {
+                mouse.LeftButtonDown();
+                leftClickDown = true;
+
+                return;
+            }
+            else if (leftClickDown && !leftClick)
+            {
+                mouse.LeftButtonUp();
+                leftClickDown = false;
+            }
+
+            if (rightClick && !rightClickDown)
+            {
+                mouse.RightButtonDown();
+                rightClickDown = true;
+
+                return;
+            }
+            else if (rightClickDown && !rightClick)
+            {
+                mouse.RightButtonUp();
+                rightClickDown = false;
+            }
+
+        }
 
 
+        void setActive()
+        {
+            controllerActive = true;
+        }
 
+        void resetActive()
+        {
+            controllerActive = false;
+        }
+
+
+        // A couple getters to make life easier
         float getMouseSpeed()
         {
             return mouseSpeed;
         }
-    }
 
+        int getRightStickXRaw()
+        {
+            if (status.RightThumbX > 0)
+            {
+                return 1;
+            }
+            else if (status.RightThumbX < 0)
+            {
+                return -1;
+            }
+            return 0;
+        }
+
+        int getRightStickYRaw()
+        {
+            if (status.RightThumbY > 0)
+            {
+                return 1;
+            }
+            else if (status.RightThumbY < 0)
+            {
+                return -1;
+            }
+            return 0;
+        }
+
+        bool getRightClickDown()
+        {
+            return rightClickDown;
+        }
+
+        bool getLeftClickDown()
+        {
+            return leftClickDown;
+        }
+
+        bool getMiddleClickDown()
+        {
+            return middleClickDown;
+        }
+
+        void setRightClickDown(bool state)
+        {
+            rightClickDown = state;
+        }
+
+        void setLeftClickDown(bool state)
+        {
+            leftClickDown = state;
+        }
+
+        void setMiddleClickDown(bool state)
+        {
+            middleClickDown = state;
+        }
+    }
 }

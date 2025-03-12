@@ -1,0 +1,15 @@
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\SharpDX.dll
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\SharpDX.XInput.dll
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\WindowsInput.dll
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\SharpDX.pdb
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\SharpDX.XInput.pdb
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\SharpDX.XInput.xml
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\WindowsInput.xml
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\obj\Debug\ControllerToMouse.csproj.AssemblyReference.cache
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\obj\Debug\ControllerToMouse.csproj.CoreCompileInputs.cache
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\obj\Debug\Controll.59188E75.Up2Date
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\Controller To Mouse.exe.config
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\Controller To Mouse.exe
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\bin\Debug\Controller To Mouse.pdb
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\obj\Debug\Controller To Mouse.exe
+C:\Users\irarc\OneDrive\Documents\GitHub\pcremote-csharp\obj\Debug\Controller To Mouse.pdb

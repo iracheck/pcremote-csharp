@@ -18,11 +18,21 @@ obj/
 
 # Ignore Rider settings
 *.iml
-.idea/
 *.ipr
 *.iws
 out/
 
+# Ignore NuGet packages
+packages/
+*.nupkg
+
 # Ignore user-specific files
 *.userprefs
-*.cache
+
+# Ignore temporary & backup files
+*.tmp
+*.bak
+
+# Ignore system files
+Thumbs.db
+.DS_Store

@@ -9,7 +9,7 @@ using WindowsInput;
 using WindowsInput.Native;
 
 
-namespace ControllerToMouse.src.Utils
+namespace ControllerToMouse.Utils
 {
     internal static class MouseUtils
     {
@@ -38,14 +38,15 @@ namespace ControllerToMouse.src.Utils
             }
             else
             {
-                Console.WriteLine("[ERROR @ MouseUtils] Could not find mouse location. Setting to default (0,0).");
+                Console.WriteLine("[ERROR @ MouseUtils] Could not find mouse location. Returning default (0,0).");
                 point.x = 0;
                 point.y = 0;
+                ResetMousePos();
                 return point;
             }
         }
 
-        public static void resetMousePos()
+        public static void ResetMousePos()
         {
             mouse.MoveMouseTo(0, 0);
         }

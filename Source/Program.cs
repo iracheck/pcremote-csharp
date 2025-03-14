@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ControllerToMouse.src.Backend;
+using ControllerToMouse.Backend;
 using System.Threading;
 
 namespace ControllerToMouse
@@ -15,11 +15,7 @@ namespace ControllerToMouse
         static void Main(string[] args)
         {
             InputDevice test = new InputDevice();
-            while (true)
-            {
-                test.pollDevice();
-                Thread.Sleep(10);
-            }
+            test.PollDevice();
         }
     }
 }

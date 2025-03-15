@@ -9,8 +9,10 @@ using WindowsInput;
 using WindowsInput.Native;
 using SharpDX.Mathematics.Interop;
 using System.Threading;
+using System.Diagnostics;
 
 using ControllerToMouse.Settings;
+using ControllerToMouse.Source.Utils;
 
 namespace ControllerToMouse.Backend
 {
@@ -28,8 +30,7 @@ namespace ControllerToMouse.Backend
         UserIndex Index;
 
         // Sleep Functionalities
-        DateTime Now = DateTime.Now;
-        DateTime LastAction = DateTime.Now;
+        Stopwatch Stopwatch;
 
         private bool ControllerActive;
 
@@ -49,7 +50,9 @@ namespace ControllerToMouse.Backend
         // For controller sleep
         private int ACTIVE_UPDATE_DURATION = GlobalSettings.RefreshSpeed;
         private int SLEEP_UPDATE_DURATION = GlobalSettings.SleepRefreshSpeed;
-        private int BATTERY_UPDATE_DURATION = GlobalSettings.BatterySaverRefreshSpeed;
+        private int BATTERY_SAVER_UPDATE_DURATION = GlobalSettings.BatterySaverRefreshSpeed;
+
+        private int TIME_BEFORE_SLEEP = 500; // in milliseconds
 
 
         public InputDevice()
@@ -58,6 +61,7 @@ namespace ControllerToMouse.Backend
 
             Controller = new Controller(UserIndex.One);
             Index = Controller.UserIndex;
+            Stopwatch = new Stopwatch();
 
             Simulator = new InputSimulator();
 
@@ -65,24 +69,38 @@ namespace ControllerToMouse.Backend
             Mouse = Simulator.Mouse;
         }
 
-        public int PollDevice()
+        public void PollDevice()
         {
             while (Controller.IsConnected) // This while loop is temporary before a more advanced method can be written
             {
-                Status = Controller.GetState().Gamepad; // gets the state of all controller buttons/axes
+                Stopwatch.StartNew();
 
-                HandleMouseMovement();
-                HandleScrolling();
-                HandleMouseClicks();
+                Status = Controller.GetState().Gamepad; // gets the state of all controller buttons/axe
 
-                HandleControllerSleep();
+                HandleInputs();
+
+                CalculateSleepTime();
+                Console.WriteLine(CalculateSleepTime());
+
+                Sleep();
             }
-            return 0;
+        }
+
+        public void HandleInputs()
+        {
+            bool mouseMovement = HandleMouseMovement();
+            bool scrolling = HandleScrolling();
+            bool clicking = HandleMouseClicks();
+
+            if (mouseMovement || scrolling || clicking)
+            {
+                SetActive();
+            }
         }
 
 
         // Handles all mouse movements
-        void HandleMouseMovement()
+        bool HandleMouseMovement()
         {
             int lx = Status.LeftThumbX / MOUSE_SENSITIVITY; // Normalize input
             int ly = Status.LeftThumbY / MOUSE_SENSITIVITY;
@@ -91,28 +109,31 @@ namespace ControllerToMouse.Backend
             if (lx != 0 || ly != 0)
             {
                 UpdateMouseSpeed(1);
-                SetActive();
 
                 lx = (int)(lx * MouseSpeed);
                 ly = (int)(ly * MouseSpeed) * -1;
 
                 Mouse.MoveMouseBy(lx, ly);
+                return true;
             }
             else
             {
                 UpdateMouseSpeed(0);
+                return false;
             }
         }
 
 
         // Mouse Speed uses a state system in order to determine current speed.
-        // Mouse Speed is a percentage-- 0.5 = 50% of maximum
+        // Mouse Speed is a percentage--> 0.5 = 50% of maximum
         // 0 -> reset
         // 1 -> accelerate
+        // 2 --> limited acceleration
         // -1 -> max speed
         float UpdateMouseSpeed(int state)
         {
-            float accelerationMultiplier = 1.0f / 20f; // This is an arbitrary number that slows down the speed of the mouse acceleration, to allow precise movement.
+            // The "Acceleration Multiplier" is the percentage of the max speed that the mouse will accelerate by every time this method is called. 0.05 is 5%/s
+            float accelerationMultiplier = 0.05f; 
 
             if (state == 0) // reset
             {
@@ -131,34 +152,34 @@ namespace ControllerToMouse.Backend
 
 
         // Handles scrolling
-        void HandleScrolling()
+        bool HandleScrolling()
         {
             int rx = GetRightStickXRaw();
             int ry = GetRightStickYRaw();
 
             if (rx != 0 || ry != 0)
             {
-                SetActive(); // notes that the controller is active
                 if (rx != 0.0) Mouse.HorizontalScroll(rx);
                 if (ry != 0.0) Mouse.VerticalScroll(ry);
+
+                return true;
             }
+            return false;
         }
 
-
-        void HandleMouseClicks()
+        // Handles mouse clicks
+        bool HandleMouseClicks()
         {
             bool leftClick = Status.LeftTrigger > 0;
             bool rightClick = Status.RightTrigger > 0;
             bool middleClick = leftClick && rightClick;
-
-            if (leftClick || rightClick) SetActive();
 
             // middle click
             if (middleClick)
             {
                 Mouse.XButtonDown(3);
 
-                return;
+                return true;
             }
             else if (middleClick & !MiddleClickDown)
             {
@@ -171,7 +192,7 @@ namespace ControllerToMouse.Backend
                 Mouse.LeftButtonDown();
                 LeftClickDown = true;
 
-                return;
+                return true;
             }
             else if (LeftClickDown && leftClick)
             {
@@ -185,7 +206,7 @@ namespace ControllerToMouse.Backend
                 Mouse.RightButtonDown();
                 RightClickDown = true;
 
-                return;
+                return true;
             }
             else if (RightClickDown && !rightClick)
             {
@@ -193,18 +214,44 @@ namespace ControllerToMouse.Backend
                 RightClickDown = false;
             }
 
+            return false;
         }
 
 
-        int HandleControllerSleep()
+        float CalculateSleepTime()
         {
-            //deltaTime deltaTime = Now.CompareTo(LastAction);
-            if (IsActive())
+            float delta = Stopwatch.ElapsedMilliseconds;
+
+            if (GetIsActive() && GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver()) // This is currently not fully functional. :. Will need to be integrated at a later date
             {
-                Console.WriteLine("Controller " + Index + " sleeping.");
+                // Console.WriteLine("Battery Saver on");
+                return BATTERY_SAVER_UPDATE_DURATION;
+            }
+            else if (!GetIsActive() && delta > TIME_BEFORE_SLEEP)
+            {
+                // Console.WriteLine("Sleeping...");
+                return SLEEP_UPDATE_DURATION;
+            }
+            else
+            {
+                // Console.WriteLine("Not sleeping...");
                 return ACTIVE_UPDATE_DURATION;
             }
-            return 100;
+        }
+
+        void Sleep()
+        {
+            float deltaTime;
+            Stopwatch sleepTimer = new Stopwatch();
+
+            sleepTimer.Start();
+
+            do { 
+                deltaTime = sleepTimer.ElapsedMilliseconds;
+                Console.WriteLine(deltaTime);
+                Console.WriteLine(CalculateSleepTime());
+            } while (deltaTime < CalculateSleepTime());
+            Console.WriteLine("Done Sleeping");
         }
 
 
@@ -220,7 +267,7 @@ namespace ControllerToMouse.Backend
         }
 
 
-        public bool IsActive()
+        public bool GetIsActive()
         {
             return ControllerActive;
         }

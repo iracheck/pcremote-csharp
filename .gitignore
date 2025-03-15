@@ -36,3 +36,20 @@ packages/
 # Ignore system files
 Thumbs.db
 .DS_Store
+
+
+# Ignore some other files that should not be present in github
+.idea/.idea.ControllerToMouse/.idea/projectSettingsUpdater.xml
+ 
+.idea/.idea.ControllerToMouse/.idea/workspace.xml
+ 
+/.vs
+ 
+
+/bin/Debug
+ 
+
+/obj/Debug
+ 
+
+/packages

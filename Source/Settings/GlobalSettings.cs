@@ -17,6 +17,8 @@ namespace ControllerToMouse.Settings
 
         public static int BatterySaverRefreshSpeed { get; set; } = 50;
 
+        public static int TimeBeforeSleep { get; set; } = 500;
+
         public static bool IdleSleepEnabled { get; set; } = true;
 
         public static bool BatterySaverEnabled { get; set; } = true;

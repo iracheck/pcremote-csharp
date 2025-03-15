@@ -11,7 +11,7 @@ namespace ControllerToMouse.Settings
     internal static class GlobalSettings
     {
         // Settings that deal with controller sleep and system power use.
-        public static int RefreshSpeed { get; set; } = 10;
+        public static int ActiveRefreshSpeed { get; set; } = 10;
 
         public static int SleepRefreshSpeed { get; set; } = 100;
 

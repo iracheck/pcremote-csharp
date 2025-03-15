@@ -31,14 +31,14 @@ namespace ControllerToMouse.Source.Utils
 
         public static bool IsOnAC()
         {
-            int ac = getCurrentStatus().ACLineStatus;
+            int ac = getCurrentStatus().ACLineStatus; // returns 0 if on battery, 1 if on AC
             if (ac == 1) return true;
             else return false;
         }
 
         public static bool IsOnBatterySaver()
         {
-            int bsvr = getCurrentStatus().BatteryFlag;
+            int bsvr = getCurrentStatus().SystemStatusFlag; // returns 0 if off, 1 if on
             if (bsvr == 1) return true;
             else return false;
         }

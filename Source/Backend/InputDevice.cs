@@ -30,7 +30,7 @@ namespace ControllerToMouse.Backend
         UserIndex Index;
 
         // Sleep Functionalities
-        Stopwatch Stopwatch;
+        Stopwatch LastAction;
 
         private bool ControllerActive;
 
@@ -40,19 +40,11 @@ namespace ControllerToMouse.Backend
         private bool MiddleClickDown = false;
 
 
-        // Values
+        // Mouse Speed Values
         private float MouseSpeed;
 
-
         // Constants
-        private int MOUSE_SENSITIVITY = GlobalSettings.MouseSensitivity; // controller version of DPI
-
-        // For controller sleep
-        private int ACTIVE_UPDATE_DURATION = GlobalSettings.RefreshSpeed;
-        private int SLEEP_UPDATE_DURATION = GlobalSettings.SleepRefreshSpeed;
-        private int BATTERY_SAVER_UPDATE_DURATION = GlobalSettings.BatterySaverRefreshSpeed;
-
-        private int TIME_BEFORE_SLEEP = 500; // in milliseconds
+        private const float MOUSE_ACCELERATION_RATE = 0.05f;
 
 
         public InputDevice()
@@ -61,7 +53,7 @@ namespace ControllerToMouse.Backend
 
             Controller = new Controller(UserIndex.One);
             Index = Controller.UserIndex;
-            Stopwatch = new Stopwatch();
+            LastAction = new Stopwatch();
 
             Simulator = new InputSimulator();
 
@@ -73,16 +65,12 @@ namespace ControllerToMouse.Backend
         {
             while (Controller.IsConnected) // This while loop is temporary before a more advanced method can be written
             {
-                Stopwatch.StartNew();
+                if (LastAction.IsRunning == false) LastAction.Start();
 
-                Status = Controller.GetState().Gamepad; // gets the state of all controller buttons/axe
+                Status = Controller.GetState().Gamepad; // updates the status of all buttons/axes
 
                 HandleInputs();
-
-                CalculateSleepTime();
-                Console.WriteLine(CalculateSleepTime());
-
-                Sleep();
+                Thread.Sleep(CalculateSleepTime());
             }
         }
 
@@ -95,6 +83,7 @@ namespace ControllerToMouse.Backend
             if (mouseMovement || scrolling || clicking)
             {
                 SetActive();
+                LastAction.Restart(); // reset the last action timer to ensure sleep states are handled correctly
             }
         }
 
@@ -102,8 +91,9 @@ namespace ControllerToMouse.Backend
         // Handles all mouse movements
         bool HandleMouseMovement()
         {
-            int lx = Status.LeftThumbX / MOUSE_SENSITIVITY; // Normalize input
-            int ly = Status.LeftThumbY / MOUSE_SENSITIVITY;
+            int mouseSensitivity = GlobalSettings.MouseSensitivity;
+            int lx = Status.LeftThumbX / mouseSensitivity; // Normalize input
+            int ly = Status.LeftThumbY / mouseSensitivity;
 
 
             if (lx != 0 || ly != 0)
@@ -175,38 +165,33 @@ namespace ControllerToMouse.Backend
             bool middleClick = leftClick && rightClick;
 
             // middle click
-            if (middleClick)
+            if (middleClick && !MiddleClickDown)
             {
                 Mouse.XButtonDown(3);
-
-                return true;
+                MiddleClickDown = true;
             }
-            else if (middleClick & !MiddleClickDown)
+            else if (MiddleClickDown && !middleClick)
             {
                 Mouse.XButtonUp(3);
             }
 
             // left click
-            if (leftClick && !LeftClickDown)
+            if (leftClick && !LeftClickDown && !middleClick)
             {
                 Mouse.LeftButtonDown();
                 LeftClickDown = true;
-
-                return true;
             }
-            else if (LeftClickDown && leftClick)
+            else if (LeftClickDown && !leftClick)
             {
                 Mouse.LeftButtonUp();
                 LeftClickDown = false;
             }
 
             // right click
-            if (rightClick && !RightClickDown)
+            if (rightClick && !RightClickDown && !middleClick)
             {
                 Mouse.RightButtonDown();
                 RightClickDown = true;
-
-                return true;
             }
             else if (RightClickDown && !rightClick)
             {
@@ -214,43 +199,30 @@ namespace ControllerToMouse.Backend
                 RightClickDown = false;
             }
 
-            return false;
+            return leftClick || rightClick || middleClick;
         }
 
-
-        float CalculateSleepTime()
+        // Returns the amount of time the program should "sleep" for before 
+        int CalculateSleepTime()
         {
-            float delta = Stopwatch.ElapsedMilliseconds;
+            float deltaTime = LastAction.ElapsedMilliseconds;
 
-            if (!GetIsActive() && delta > TIME_BEFORE_SLEEP) 
+            if (!GetIsActive() && deltaTime > GlobalSettings.TimeBeforeSleep) 
             {
                 //Console.WriteLine("Sleeping...");
-                return SLEEP_UPDATE_DURATION;
+                return GlobalSettings.SleepRefreshSpeed;
             }
             else if (GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
             {
                 //Console.WriteLine(GetIsActive() + " " + GlobalSettings.BatterySaverEnabled + " " + BatteryUtils.IsOnBatterySaver());
                 //Console.WriteLine("Battery Saver on");
-                return BATTERY_SAVER_UPDATE_DURATION;
+                return GlobalSettings.BatterySaverRefreshSpeed;
             }
             else
             {
                 //Console.WriteLine("Not sleeping...");
-                return ACTIVE_UPDATE_DURATION;
+                return GlobalSettings.ActiveRefreshSpeed;
             }
-        }
-
-        void Sleep()
-        {
-            float deltaTime;
-            Stopwatch sleepTimer = new Stopwatch();
-
-            sleepTimer.Start();
-
-            do { 
-                deltaTime = sleepTimer.ElapsedMilliseconds;
-            } while (deltaTime < CalculateSleepTime());
-            Console.WriteLine("Done sleeping after " + deltaTime + " milliseconds.");
         }
 
 

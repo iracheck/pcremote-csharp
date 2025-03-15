@@ -222,19 +222,20 @@ namespace ControllerToMouse.Backend
         {
             float delta = Stopwatch.ElapsedMilliseconds;
 
-            if (GetIsActive() && GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver()) // This is currently not fully functional. :. Will need to be integrated at a later date
+            if (!GetIsActive() && delta > TIME_BEFORE_SLEEP) 
             {
-                // Console.WriteLine("Battery Saver on");
-                return BATTERY_SAVER_UPDATE_DURATION;
-            }
-            else if (!GetIsActive() && delta > TIME_BEFORE_SLEEP)
-            {
-                // Console.WriteLine("Sleeping...");
+                //Console.WriteLine("Sleeping...");
                 return SLEEP_UPDATE_DURATION;
+            }
+            else if (GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
+            {
+                //Console.WriteLine(GetIsActive() + " " + GlobalSettings.BatterySaverEnabled + " " + BatteryUtils.IsOnBatterySaver());
+                //Console.WriteLine("Battery Saver on");
+                return BATTERY_SAVER_UPDATE_DURATION;
             }
             else
             {
-                // Console.WriteLine("Not sleeping...");
+                //Console.WriteLine("Not sleeping...");
                 return ACTIVE_UPDATE_DURATION;
             }
         }
@@ -248,10 +249,8 @@ namespace ControllerToMouse.Backend
 
             do { 
                 deltaTime = sleepTimer.ElapsedMilliseconds;
-                Console.WriteLine(deltaTime);
-                Console.WriteLine(CalculateSleepTime());
             } while (deltaTime < CalculateSleepTime());
-            Console.WriteLine("Done Sleeping");
+            Console.WriteLine("Done sleeping after " + deltaTime + " milliseconds.");
         }
 
 

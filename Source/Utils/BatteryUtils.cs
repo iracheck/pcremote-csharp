@@ -38,7 +38,7 @@ namespace ControllerToMouse.Source.Utils
 
         public static bool IsOnBatterySaver()
         {
-            int bsvr = getCurrentStatus().ACLineStatus;
+            int bsvr = getCurrentStatus().BatteryFlag;
             if (bsvr == 1) return true;
             else return false;
         }

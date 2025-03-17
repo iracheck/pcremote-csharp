@@ -59,6 +59,7 @@
     <Compile Include="Source\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Settings\GlobalSettings.cs" />
+    <Compile Include="Source\Utils\MathUtils.cs" />
     <Compile Include="Source\Utils\MediaUtils.cs" />
     <Compile Include="Source\Utils\MouseUtils.cs" />
     <Compile Include="Source\Utils\BatteryUtils.cs" />

@@ -43,6 +43,7 @@ namespace ControllerToMouse.Backend
         // Mouse Speed Values
         private float MouseSpeed;
 
+
         // Constants
         private const float MOUSE_ACCELERATION_RATE = 0.05f;
 
@@ -52,7 +53,13 @@ namespace ControllerToMouse.Backend
             Console.WriteLine("Creating new input device...");
 
             Controller = new Controller(UserIndex.One);
+            if (Controller.IsConnected == false) {
+                Console.WriteLine("No controller found.");
+                return;
+            }
+
             Index = Controller.UserIndex;
+
             LastAction = new Stopwatch();
 
             Simulator = new InputSimulator();
@@ -60,6 +67,7 @@ namespace ControllerToMouse.Backend
             Keyboard = Simulator.Keyboard;
             Mouse = Simulator.Mouse;
         }
+
 
         public void PollDevice()
         {
@@ -74,17 +82,15 @@ namespace ControllerToMouse.Backend
             }
         }
 
-        public void HandleInputs()
+        // Calls inputs and sets active state based off of user input
+        void HandleInputs()
         {
             bool mouseMovement = HandleMouseMovement();
             bool scrolling = HandleScrolling();
             bool clicking = HandleMouseClicks();
 
-            if (mouseMovement || scrolling || clicking)
-            {
-                SetActive();
-                LastAction.Restart(); // reset the last action timer to ensure sleep states are handled correctly
-            }
+            if (mouseMovement || scrolling || clicking) SetActive();
+            else ResetActive();
         }
 
 
@@ -95,13 +101,15 @@ namespace ControllerToMouse.Backend
             int lx = Status.LeftThumbX / mouseSensitivity; // Normalize input
             int ly = Status.LeftThumbY / mouseSensitivity;
 
-
             if (lx != 0 || ly != 0)
             {
                 UpdateMouseSpeed(1);
 
+                // Calculate final x and y values of left stick
                 lx = (int)(lx * MouseSpeed);
                 ly = (int)(ly * MouseSpeed) * -1;
+
+                Console.WriteLine("X: " + lx + " Y: " + ly);
 
                 Mouse.MoveMouseBy(lx, ly);
                 return true;
@@ -118,26 +126,34 @@ namespace ControllerToMouse.Backend
         // Mouse Speed is a percentage--> 0.5 = 50% of maximum
         // 0 -> reset
         // 1 -> accelerate
-        // 2 --> limited acceleration
         // -1 -> max speed
-        float UpdateMouseSpeed(int state)
+        void UpdateMouseSpeed(int state)
         {
-            // The "Acceleration Multiplier" is the percentage of the max speed that the mouse will accelerate by every time this method is called. 0.05 is 5%/s
-            float accelerationMultiplier = 0.05f; 
+            float calculatedSpeed = MouseSpeed;
 
+            // Based on state, decide what to do with speed
             if (state == 0) // reset
             {
-                MouseSpeed = 0f;
+                calculatedSpeed = 0f;
             }
             else if (state == 1) // accelerate
             {
-                MouseSpeed += (1 - MouseSpeed) * accelerationMultiplier;
+                //// Find the normalization (e.g. if battery saver is on, emulate the amount of impact that same input would have if it were off)
+                float normalization = CalculateSleepTime() / 10;
+                MouseSpeed *= normalization;
+
+                // Accelerate
+                calculatedSpeed += (1 - calculatedSpeed) * MOUSE_ACCELERATION_RATE * normalization;
             }
             else if (state == -1) // max speed
             {
-                MouseSpeed = 1;
+                calculatedSpeed = 1;
             }
-            return MouseSpeed;
+
+            // Ensures mouse speed does not go above 100% or below 0%
+            calculatedSpeed = MathUtils.Clamp(calculatedSpeed, 0, 1);
+
+            MouseSpeed = calculatedSpeed;
         }
 
 
@@ -209,18 +225,14 @@ namespace ControllerToMouse.Backend
 
             if (!GetIsActive() && deltaTime > GlobalSettings.TimeBeforeSleep) 
             {
-                //Console.WriteLine("Sleeping...");
                 return GlobalSettings.SleepRefreshSpeed;
             }
             else if (GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
             {
-                //Console.WriteLine(GetIsActive() + " " + GlobalSettings.BatterySaverEnabled + " " + BatteryUtils.IsOnBatterySaver());
-                //Console.WriteLine("Battery Saver on");
                 return GlobalSettings.BatterySaverRefreshSpeed;
             }
             else
             {
-                //Console.WriteLine("Not sleeping...");
                 return GlobalSettings.ActiveRefreshSpeed;
             }
         }
@@ -229,6 +241,7 @@ namespace ControllerToMouse.Backend
         void SetActive()
         {
             ControllerActive = true;
+            LastAction.Restart(); // reset the last action timer to ensure sleep states are handled correctly
         }
 
 
@@ -245,7 +258,7 @@ namespace ControllerToMouse.Backend
 
 
 
-        float GetMouseSpeed()
+        public float GetMouseSpeed()
         {
             return MouseSpeed;
         }

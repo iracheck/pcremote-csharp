@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ControllerToMouse.Backend;
 using System.Threading;
+
+using ControllerToMouse.Backend;
+using ControllerToMouse.Utils;
 
 namespace ControllerToMouse
 {
@@ -14,8 +16,12 @@ namespace ControllerToMouse
     {
         static void Main(string[] args)
         {
+            MediaUtils.IncreaseVolume();
+
             InputDevice test = new InputDevice();
             test.PollDevice();
+
+
         }
     }
 }

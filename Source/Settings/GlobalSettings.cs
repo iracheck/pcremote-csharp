@@ -31,6 +31,10 @@ namespace ControllerToMouse.Settings
         // Blacklist settings
         public static bool BlacklistEnabled { get; set; } = false;
 
+
+        // Media Control settings
+        public static float audioStep { get; set; } = 5.0f;
+
         public static List<string> BlacklistedApplications { get; } = new List<string>();
 
         public static bool AddToBlacklist(string app)

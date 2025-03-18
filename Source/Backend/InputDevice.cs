@@ -12,7 +12,7 @@ using System.Threading;
 using System.Diagnostics;
 
 using ControllerToMouse.Settings;
-using ControllerToMouse.Source.Utils;
+using ControllerToMouse.Utils;
 
 namespace ControllerToMouse.Backend
 {
@@ -78,9 +78,11 @@ namespace ControllerToMouse.Backend
                 Status = Controller.GetState().Gamepad; // updates the status of all buttons/axes
 
                 HandleInputs();
+
                 Thread.Sleep(CalculateSleepTime());
             }
         }
+
 
         // Calls inputs and sets active state based off of user input
         void HandleInputs()
@@ -98,7 +100,9 @@ namespace ControllerToMouse.Backend
         bool HandleMouseMovement()
         {
             int mouseSensitivity = GlobalSettings.MouseSensitivity;
-            int lx = Status.LeftThumbX / mouseSensitivity; // Normalize input
+
+            // Get the input from each axis of the thumbstick, and then normalize it based off of the sensitivity given by the user.
+            int lx = Status.LeftThumbX / mouseSensitivity;
             int ly = Status.LeftThumbY / mouseSensitivity;
 
             if (lx != 0 || ly != 0)
@@ -108,8 +112,6 @@ namespace ControllerToMouse.Backend
                 // Calculate final x and y values of left stick
                 lx = (int)(lx * MouseSpeed);
                 ly = (int)(ly * MouseSpeed) * -1;
-
-                Console.WriteLine("X: " + lx + " Y: " + ly);
 
                 Mouse.MoveMouseBy(lx, ly);
                 return true;
@@ -138,11 +140,10 @@ namespace ControllerToMouse.Backend
             }
             else if (state == 1) // accelerate
             {
-                //// Find the normalization (e.g. if battery saver is on, emulate the amount of impact that same input would have if it were off)
+                // Find the normalization (e.g. if battery saver is on, emulate the amount of impact that same input would have if it were off)
                 float normalization = CalculateSleepTime() / 10;
-                MouseSpeed *= normalization;
 
-                // Accelerate
+                // Calculate acceleration
                 calculatedSpeed += (1 - calculatedSpeed) * MOUSE_ACCELERATION_RATE * normalization;
             }
             else if (state == -1) // max speed
@@ -217,6 +218,7 @@ namespace ControllerToMouse.Backend
 
             return leftClick || rightClick || middleClick;
         }
+
 
         // Returns the amount of time the program should "sleep" for before 
         int CalculateSleepTime()

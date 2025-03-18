@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControllerToMouse.Source.Utils
+namespace ControllerToMouse.Utils
 {
     internal static class MathUtils
     {

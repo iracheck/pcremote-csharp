@@ -16,12 +16,8 @@ namespace ControllerToMouse
     {
         static void Main(string[] args)
         {
-            MediaUtils.IncreaseVolume();
-
             InputDevice test = new InputDevice();
             test.PollDevice();
-
-
         }
     }
 }

@@ -21,6 +21,7 @@ namespace ControllerToMouse.Backend
         // External Library Hooks
         Controller Controller;
         Gamepad Status;
+        GamepadButtonFlags Buttons;
 
         InputSimulator Simulator;
         IMouseSimulator Mouse;
@@ -34,10 +35,17 @@ namespace ControllerToMouse.Backend
 
         private bool ControllerActive;
 
+
         // Clicking
-        private bool LeftClickDown = false;
-        private bool RightClickDown = false;
-        private bool MiddleClickDown = false;
+        private bool LeftClickPressed = false;
+        private bool RightClickPressed = false;
+        private bool MiddleClickPressed = false;
+
+        // D-Pad
+        private bool DPadUpPressed;
+        private bool DPadDownPressed;
+        private bool DPadLeftPressed;
+        private bool DPadRightPressed;
 
 
         // Mouse Speed Values
@@ -53,12 +61,11 @@ namespace ControllerToMouse.Backend
             Console.WriteLine("Creating new input device...");
 
             Controller = new Controller(UserIndex.One);
+
             if (Controller.IsConnected == false) {
                 Console.WriteLine("No controller found.");
                 return;
             }
-
-            Index = Controller.UserIndex;
 
             LastAction = new Stopwatch();
 
@@ -73,9 +80,11 @@ namespace ControllerToMouse.Backend
         {
             while (Controller.IsConnected) // This while loop is temporary before a more advanced method can be written
             {
+                Console.WriteLine("Polling controller " + Controller.UserIndex);
                 if (LastAction.IsRunning == false) LastAction.Start();
 
                 Status = Controller.GetState().Gamepad; // updates the status of all buttons/axes
+                Buttons = Controller.GetState().Gamepad.Buttons;
 
                 HandleInputs();
 
@@ -87,17 +96,18 @@ namespace ControllerToMouse.Backend
         // Calls inputs and sets active state based off of user input
         void HandleInputs()
         {
-            bool mouseMovement = HandleMouseMovement();
-            bool scrolling = HandleScrolling();
-            bool clicking = HandleMouseClicks();
+            bool leftStick = UpdateLeftStick();
+            bool rightStick = UpdateRightStick();
+            bool triggers = UpdateTriggers();
+            bool dpad = UpdateDPad();
 
-            if (mouseMovement || scrolling || clicking) SetActive();
+            if (leftStick || rightStick || triggers || dpad) SetActive();
             else ResetActive();
         }
 
 
         // Handles all mouse movements
-        bool HandleMouseMovement()
+        bool UpdateLeftStick()
         {
             int mouseSensitivity = GlobalSettings.MouseSensitivity;
 
@@ -107,7 +117,7 @@ namespace ControllerToMouse.Backend
 
             if (lx != 0 || ly != 0)
             {
-                UpdateMouseSpeed(1);
+                CalculateMouseSpeed(1);
 
                 // Calculate final x and y values of left stick
                 lx = (int)(lx * MouseSpeed);
@@ -118,7 +128,7 @@ namespace ControllerToMouse.Backend
             }
             else
             {
-                UpdateMouseSpeed(0);
+                CalculateMouseSpeed(0);
                 return false;
             }
         }
@@ -129,26 +139,29 @@ namespace ControllerToMouse.Backend
         // 0 -> reset
         // 1 -> accelerate
         // -1 -> max speed
-        void UpdateMouseSpeed(int state)
+
+        // Because mouse acceleration is handled on a per-controller basis, it is called without an expected return statement
+        void CalculateMouseSpeed(int state)
         {
             float calculatedSpeed = MouseSpeed;
 
             // Based on state, decide what to do with speed
             if (state == 0) // reset
             {
-                calculatedSpeed = 0f;
+                calculatedSpeed = 0.0f;
             }
             else if (state == 1) // accelerate
             {
                 // Find the normalization (e.g. if battery saver is on, emulate the amount of impact that same input would have if it were off)
-                float normalization = CalculateSleepTime() / 10;
+                float normalization = (float)CalculateSleepTime() / 10;
 
                 // Calculate acceleration
-                calculatedSpeed += (1 - calculatedSpeed) * MOUSE_ACCELERATION_RATE * normalization;
+                calculatedSpeed += (1 - MouseSpeed) * MOUSE_ACCELERATION_RATE * normalization;
+
             }
             else if (state == -1) // max speed
             {
-                calculatedSpeed = 1;
+                calculatedSpeed = 1.0f;
             }
 
             // Ensures mouse speed does not go above 100% or below 0%
@@ -158,8 +171,29 @@ namespace ControllerToMouse.Backend
         }
 
 
+        // Returns the amount of time the program should "sleep" for before 
+        int CalculateSleepTime()
+        {
+            float deltaTime = LastAction.ElapsedMilliseconds;
+
+            if (!GetIsActive() && deltaTime > GlobalSettings.TimeBeforeSleep)
+            {
+                return GlobalSettings.SleepRefreshSpeed;
+            }
+            else if (GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
+            {
+                return GlobalSettings.BatterySaverRefreshSpeed;
+            }
+            else
+            {
+                return GlobalSettings.ActiveRefreshSpeed;
+            }
+        }
+
+
+
         // Handles scrolling
-        bool HandleScrolling()
+        bool UpdateRightStick()
         {
             int rx = GetRightStickXRaw();
             int ry = GetRightStickYRaw();
@@ -175,70 +209,102 @@ namespace ControllerToMouse.Backend
         }
 
         // Handles mouse clicks
-        bool HandleMouseClicks()
+        bool UpdateTriggers()
         {
             bool leftClick = Status.LeftTrigger > 0;
             bool rightClick = Status.RightTrigger > 0;
             bool middleClick = leftClick && rightClick;
 
             // middle click
-            if (middleClick && !MiddleClickDown)
+            if (middleClick && !MiddleClickPressed)
             {
                 Mouse.XButtonDown(3);
-                MiddleClickDown = true;
+                MiddleClickPressed = true;
             }
-            else if (MiddleClickDown && !middleClick)
+            else if (MiddleClickPressed && !middleClick)
             {
                 Mouse.XButtonUp(3);
+                MiddleClickPressed = false;
             }
 
             // left click
-            if (leftClick && !LeftClickDown && !middleClick)
+            if (leftClick && !LeftClickPressed && !middleClick)
             {
                 Mouse.LeftButtonDown();
-                LeftClickDown = true;
+                LeftClickPressed = true;
             }
-            else if (LeftClickDown && !leftClick)
+            else if (LeftClickPressed && !leftClick)
             {
                 Mouse.LeftButtonUp();
-                LeftClickDown = false;
+                LeftClickPressed = false;
             }
 
             // right click
-            if (rightClick && !RightClickDown && !middleClick)
+            if (rightClick && !RightClickPressed && !middleClick)
             {
                 Mouse.RightButtonDown();
-                RightClickDown = true;
+                RightClickPressed = true;
             }
-            else if (RightClickDown && !rightClick)
+            else if (RightClickPressed && !rightClick)
             {
                 Mouse.RightButtonUp();
-                RightClickDown = false;
+                RightClickPressed = false;
             }
 
             return leftClick || rightClick || middleClick;
         }
 
-
-        // Returns the amount of time the program should "sleep" for before 
-        int CalculateSleepTime()
+        bool UpdateDPad()
         {
-            float deltaTime = LastAction.ElapsedMilliseconds;
+            bool up = (Buttons == GamepadButtonFlags.DPadUp);
+            bool down = (Buttons == GamepadButtonFlags.DPadDown);
+            bool left = (Buttons == GamepadButtonFlags.DPadLeft);
+            bool right = (Buttons == GamepadButtonFlags.DPadRight);
 
-            if (!GetIsActive() && deltaTime > GlobalSettings.TimeBeforeSleep) 
+            if (up && !DPadUpPressed)
             {
-                return GlobalSettings.SleepRefreshSpeed;
+                MediaUtils.IncreaseVolume();
+                DPadUpPressed = true;
             }
-            else if (GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
+            else if (DPadUpPressed && !up)
             {
-                return GlobalSettings.BatterySaverRefreshSpeed;
+                DPadUpPressed = false;
             }
-            else
+
+            if (down && !DPadDownPressed)
             {
-                return GlobalSettings.ActiveRefreshSpeed;
+                MediaUtils.DecreaseVolume();
+                DPadDownPressed = true;
             }
+            else if (DPadDownPressed && !down)
+            {
+                DPadDownPressed= false;
+            }
+
+            if (left && !DPadLeftPressed)
+            {
+                MediaUtils.ToggleMute();
+                DPadLeftPressed = true;
+            }
+            else if (DPadLeftPressed && !left)
+            {
+                DPadLeftPressed = false;
+            }
+
+            if (right && !DPadRightPressed)
+            {
+                MediaUtils.TogglePlay();
+                DPadRightPressed = true;
+            }
+            else if (DPadRightPressed && !right)
+            {
+                DPadRightPressed = false;
+            }
+
+
+
+                return up || down || left || right;
         }
-
 
         void SetActive()
         {

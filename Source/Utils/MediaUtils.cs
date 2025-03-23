@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AudioSwitcher.AudioApi.CoreAudio;
+using WindowsInput.Native;
 
 using ControllerToMouse.Settings;
 using ControllerToMouse.Utils;
+using WindowsInput;
+using System.Runtime.InteropServices;
 
 namespace ControllerToMouse.Utils
 {
@@ -14,7 +17,11 @@ namespace ControllerToMouse.Utils
     {
         static private CoreAudioController AudioController = new CoreAudioController();
 
+        static private InputSimulator InputSimulator = new InputSimulator();
+
         // Volume Functionality
+
+        // Increase and Decrease volume may seem counterintuitive because you can't specify the amount, however controllers do not have this feature.
         public static void IncreaseVolume()
         {
             if (AudioDeviceExists()) SetRelativeVolume(GlobalSettings.audioStep);
@@ -25,6 +32,7 @@ namespace ControllerToMouse.Utils
             if (AudioDeviceExists()) SetRelativeVolume(-GlobalSettings.audioStep);
         }
 
+        // Changes the relative volume according to its current value [volume (50) + step (5) = newVolume (55)]
         private static void SetRelativeVolume(float step)
         {
             float newVolume = (float)GetVolume() + step;
@@ -33,10 +41,11 @@ namespace ControllerToMouse.Utils
             if (AudioDeviceExists()) AudioController.DefaultPlaybackDevice.Volume = newVolume;
         }
 
-        private static void SetExactVolume(float value)
+        // Sets the volume to this exact value.
+        private static void SetExactVolume(float newVolume)
         {
-            value = MathUtils.Clamp(value, 0, 100);
-            if (AudioDeviceExists()) AudioController.DefaultPlaybackDevice.Volume = value;
+            newVolume = MathUtils.Clamp(newVolume, 0, 100);
+            if (AudioDeviceExists()) AudioController.DefaultPlaybackDevice.Volume = newVolume;
         }
 
         public static double GetVolume()
@@ -46,33 +55,47 @@ namespace ControllerToMouse.Utils
 
 
         // Muting Functionality
-        public static void ToggleMuteAudio()
+
+        // Sets the mute status to the opposite of what it currently is.
+        public static void ToggleMute()
         {
-            // Sets the mute status to the opposite of what it currently is.
             bool status = !IsMuted();
             SetIsMuted(status);
         }
-
 
         public static void SetIsMuted(bool status)
         {
             if (AudioDeviceExists()) AudioController.DefaultPlaybackDevice.Mute(status);
         }
 
+        // Returns if the current audio device is muted
         public static bool IsMuted()
         {
-            if (AudioController.DefaultPlaybackDevice.IsMuted) return true;
-            else return false;
+            return (AudioController.DefaultPlaybackDevice.IsMuted);
         }
 
 
         // Ensure that the audio device actually exists, for users who somehow don't have one.
         private static bool AudioDeviceExists()
         {
-            if (AudioController.DefaultPlaybackDevice != null) return true;
-            else return false;
+            try
+            {
+                return (AudioController.DefaultPlaybackDevice != null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
+            }
         }
 
 
+        // Play / Pause
+
+        // Should be rewritten at some point, using winAPI and more robust control but not necessary for now.
+        public static void TogglePlay()
+        {
+            InputSimulator.Keyboard.KeyPress(VirtualKeyCode.MEDIA_PLAY_PAUSE);
+        }
     }
 }

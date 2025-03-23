@@ -100,8 +100,10 @@ namespace ControllerToMouse.Backend
             bool rightStick = UpdateRightStick();
             bool triggers = UpdateTriggers();
             bool dpad = UpdateDPad();
+            bool menuR = UpdateMenuButtonRight();
+            bool menuL = UpdateMenuButtonLeft();
 
-            if (leftStick || rightStick || triggers || dpad) SetActive();
+            if (leftStick || rightStick || triggers || dpad || menuR || menuL) SetActive();
             else ResetActive();
         }
 
@@ -300,11 +302,35 @@ namespace ControllerToMouse.Backend
             {
                 DPadRightPressed = false;
             }
-
-
-
-                return up || down || left || right;
+            
+            return up || down || left || right;
         }
+
+        bool UpdateMenuButtonRight()
+        {
+            bool menuButton = (Buttons == GamepadButtonFlags.Start);
+
+            if (menuButton)
+            {
+                Keyboard.KeyPress(VirtualKeyCode.LWIN);
+                return true;
+            }
+            return false;
+        }
+
+        bool UpdateMenuButtonLeft()
+        {
+            bool startButton = (Buttons == GamepadButtonFlags.Back);
+
+            if (startButton)
+            {
+                Console.WriteLine("MenuButton Left button pressed.");
+                return true; 
+            }
+            return false;
+        }
+
+
 
         void SetActive()
         {

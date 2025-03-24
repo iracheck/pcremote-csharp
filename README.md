@@ -4,6 +4,7 @@ Intended for workflow, gaming, media center, or accessibility purposes.
 
 **Current State:** Phase 1
 
-# Current Features
-- Full Mouse Control (Clicking, Scrolling)
+## Current Features
+- Full Mouse Control (Left / Right / Middle Clicking, Scrolling, Movement)
 - Media Controls
+- Power Saving Functionalities

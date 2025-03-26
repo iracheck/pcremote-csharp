@@ -80,7 +80,7 @@ namespace ControllerToMouse.Backend
         }
 
 
-        public void PollDevice()
+        public async Task PollDeviceAsync()
         {
             while (Controller.IsConnected) // This while loop is temporary before a more advanced method can be written
             {
@@ -92,7 +92,7 @@ namespace ControllerToMouse.Backend
 
                 HandleInputs();
 
-                Thread.Sleep(CalculateSleepTime());
+                await Task.Delay(CalculateSleepTime());
             }
         }
 

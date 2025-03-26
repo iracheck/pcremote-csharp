@@ -18,7 +18,7 @@ namespace ControllerToMouse
         static void Main(string[] args)
         {
             InputDevice test = new InputDevice();
-            test.PollDevice();
+            _ = test.PollDeviceAsync();
         }
     }
 }

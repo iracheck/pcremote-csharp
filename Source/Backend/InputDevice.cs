@@ -47,6 +47,10 @@ namespace ControllerToMouse.Backend
         private bool DPadLeftPressed;
         private bool DPadRightPressed;
 
+        // Menu Buttons
+        private bool MenuButtonRightPressed;
+        private bool MenuButtonLeftPressed;
+
 
         // Mouse Speed Values
         private float MouseSpeed;
@@ -96,6 +100,7 @@ namespace ControllerToMouse.Backend
         // Calls inputs and sets active state based off of user input
         void HandleInputs()
         {
+            // Triggers checks for activity, executes actions, and then returns whether they were active or not
             bool leftStick = UpdateLeftStick();
             bool rightStick = UpdateRightStick();
             bool triggers = UpdateTriggers();
@@ -256,6 +261,7 @@ namespace ControllerToMouse.Backend
             return leftClick || rightClick || middleClick;
         }
 
+
         bool UpdateDPad()
         {
             bool up = (Buttons == GamepadButtonFlags.DPadUp);
@@ -306,26 +312,39 @@ namespace ControllerToMouse.Backend
             return up || down || left || right;
         }
 
+
         bool UpdateMenuButtonRight()
         {
             bool menuButton = (Buttons == GamepadButtonFlags.Start);
 
-            if (menuButton)
+            if (menuButton && !MenuButtonRightPressed)
             {
-                Keyboard.KeyPress(VirtualKeyCode.LWIN);
+                MenuButtonRightPressed = true;
+                Keyboard.KeyDown(VirtualKeyCode.LWIN);
+                Keyboard.KeyUp(VirtualKeyCode.LWIN);
                 return true;
+            }
+            else if (!menuButton && MenuButtonRightPressed)
+            {
+                MenuButtonLeftPressed = false;
             }
             return false;
         }
+
 
         bool UpdateMenuButtonLeft()
         {
             bool startButton = (Buttons == GamepadButtonFlags.Back);
 
-            if (startButton)
+            if (startButton && !MenuButtonLeftPressed)
             {
+                MenuButtonLeftPressed = true;
                 Console.WriteLine("MenuButton Left button pressed.");
                 return true; 
+            }
+            else if (!startButton && MenuButtonLeftPressed)
+            {
+                MenuButtonLeftPressed = false;
             }
             return false;
         }

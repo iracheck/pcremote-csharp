@@ -9,6 +9,7 @@ using System.Threading;
 
 using ControllerToMouse.Backend;
 using ControllerToMouse.Utils;
+using WindowsInput.Native;
 
 namespace ControllerToMouse
 {

@@ -89,7 +89,7 @@ namespace ControllerToMouse.Backend
             Mouse = Simulator.Mouse;
         }
 
-        // 
+        // Polls the device until polling is disabled or program is terminated
         public void PollDevice() 
         {
             while (PollingActive) // This while loop is temporary before a more advanced method can be written
@@ -137,8 +137,14 @@ namespace ControllerToMouse.Backend
             int mouseSensitivity = GlobalSettings.MouseSensitivity;
 
             // Get the input from each axis of the thumbstick, and then normalize it based off of the sensitivity given by the user.
-            int lx = Status.LeftThumbX / mouseSensitivity;
-            int ly = Status.LeftThumbY / mouseSensitivity;
+            int lx = Status.LeftThumbX;
+            int ly = Status.LeftThumbY;
+
+            LeftStickMoved = lx > 0 || ly > 0;
+
+            // Adjust for the sensitivity of the mouse
+            lx /= mouseSensitivity;
+            ly /= mouseSensitivity;
 
             if (lx != 0 || ly != 0)
             {

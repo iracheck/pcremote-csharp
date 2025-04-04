@@ -2,15 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.SymbolStore;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ControllerToMouse.Settings
 {
+    // Singleton class
     internal static class GlobalSettings
     {
-        // Settings that deal with controller sleep and system power use.
+        // Properties that deal with controller sleep and system power use.
         public static int ActiveRefreshSpeed { get; set; } = 5;
 
         public static int SleepRefreshSpeed { get; set; } = 100;
@@ -33,7 +35,25 @@ namespace ControllerToMouse.Settings
 
 
         // Media Control settings
-        public static float audioStep { get; set; } = 5.0f;
+        public static float AudioStep { get; set; } = 5.0f;
+
+
+        // GUI
+        public static bool DarkMode { get; set; } = false;
+
+
+
+        // Methods begin
+
+        public static void SetTimeBeforeSleep(int seconds)
+        {
+            TimeBeforeSleep = seconds * 1000; // converts to milliseconds
+        }
+
+        public static void SetTimeBeforeSleep(int minutes, int seconds)
+        {
+            TimeBeforeSleep = minutes * 60 * 1000 + seconds * 1000; // converts to milliseconds
+        }
 
         public static List<string> BlacklistedApplications { get; } = new List<string>();
 

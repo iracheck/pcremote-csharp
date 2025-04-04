@@ -13,9 +13,10 @@ namespace ControllerToMouse.Utils
 {
     internal static class MouseUtils
     {
-        static private InputSimulator isimulator = new InputSimulator();
-        static private IMouseSimulator mouse = isimulator.Mouse;
+        static private InputSimulator ISimulator = new InputSimulator();
+        static private IMouseSimulator Mouse = ISimulator.Mouse;
 
+        // 
         [StructLayout(LayoutKind.Sequential)]
         public struct ScreenPoint
         {
@@ -48,7 +49,7 @@ namespace ControllerToMouse.Utils
 
         public static void ResetMousePos()
         {
-            mouse.MoveMouseTo(0, 0);
+            Mouse.MoveMouseTo(0, 0);
         }
 
     }

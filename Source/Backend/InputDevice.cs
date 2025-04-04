@@ -34,6 +34,7 @@ namespace ControllerToMouse.Backend
         Stopwatch LastAction;
 
         private bool ControllerActive;
+        private bool PollingActive = true;
 
 
         // Clicking
@@ -50,6 +51,15 @@ namespace ControllerToMouse.Backend
         // Menu Buttons
         private bool MenuButtonRightPressed;
         private bool MenuButtonLeftPressed;
+
+        // Left Stick
+        private bool LeftStickMoved;
+        private bool LeftStickPressed;
+
+        // Right Stick
+        private bool RightStickMoved;
+        private bool RightStickPressed;
+
 
 
         // Mouse Speed Values
@@ -79,10 +89,10 @@ namespace ControllerToMouse.Backend
             Mouse = Simulator.Mouse;
         }
 
-
-        public async Task PollDeviceAsync()
+        // 
+        public void PollDevice() 
         {
-            while (Controller.IsConnected) // This while loop is temporary before a more advanced method can be written
+            while (PollingActive) // This while loop is temporary before a more advanced method can be written
             {
                 Console.WriteLine("Polling controller " + Controller.UserIndex);
                 if (LastAction.IsRunning == false) LastAction.Start();
@@ -92,7 +102,7 @@ namespace ControllerToMouse.Backend
 
                 HandleInputs();
 
-                await Task.Delay(CalculateSleepTime());
+                Thread.Sleep(CalculateSleepTime());
             }
         }
 
@@ -100,15 +110,23 @@ namespace ControllerToMouse.Backend
         // Calls inputs and sets active state based off of user input
         void HandleInputs()
         {
-            // Triggers checks for activity, executes actions, and then returns whether they were active or not
+            // Triggers checks for activity, executes actions, and then returns the activity status of each input
             bool leftStick = UpdateLeftStick();
             bool rightStick = UpdateRightStick();
             bool triggers = UpdateTriggers();
             bool dpad = UpdateDPad();
             bool menuR = UpdateMenuButtonRight();
             bool menuL = UpdateMenuButtonLeft();
+            bool rb = UpdateMenuButtonRight();
+            bool lb = UpdateMenuButtonLeft();
+            bool sbr = UpdateRightShoulderButton();
+            bool sbl = UpdateLeftShoulderButton();
+            bool buttons = PollButtons();
 
-            if (leftStick || rightStick || triggers || dpad || menuR || menuL) SetActive();
+
+            if (leftStick || rightStick || triggers || dpad || menuR || 
+                menuL || rb || lb || sbr || sbl || buttons) SetActive();
+
             else ResetActive();
         }
 
@@ -205,12 +223,17 @@ namespace ControllerToMouse.Backend
             int rx = GetRightStickXRaw();
             int ry = GetRightStickYRaw();
 
-            if (rx != 0 || ry != 0)
+            if ((rx != 0 || ry != 0) && !RightStickMoved)
             {
+                RightStickMoved = true;
                 if (rx != 0.0) Mouse.HorizontalScroll(rx);
                 if (ry != 0.0) Mouse.VerticalScroll(ry);
 
                 return true;
+            }
+            else if (rx == 0 && ry == 0)
+            {
+                RightStickMoved = false;
             }
             return false;
         }
@@ -339,7 +362,6 @@ namespace ControllerToMouse.Backend
             if (startButton && !MenuButtonLeftPressed)
             {
                 MenuButtonLeftPressed = true;
-                Console.WriteLine("MenuButton Left button pressed.");
                 return true; 
             }
             else if (!startButton && MenuButtonLeftPressed)
@@ -349,6 +371,79 @@ namespace ControllerToMouse.Backend
             return false;
         }
 
+
+        bool UpdateLeftShoulderButton()
+        {
+            bool state = (Buttons == GamepadButtonFlags.LeftShoulder);
+
+            if (state)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        
+        bool UpdateRightShoulderButton()
+        {
+            bool state = (Buttons == GamepadButtonFlags.LeftShoulder);
+
+            if (state)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool PollButtons()
+        {
+            return ButtonA() || ButtonB() || ButtonX() || ButtonY();
+        }
+
+        
+        bool ButtonA()
+        {
+            bool state = (Buttons == GamepadButtonFlags.A);
+
+            if (state)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool ButtonB()
+        {
+            bool state = (Buttons == GamepadButtonFlags.B);
+
+            if (state)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool ButtonX()
+        {
+            bool state = (Buttons == GamepadButtonFlags.X);
+
+            if (state)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool ButtonY()
+        {
+            bool state = (Buttons == GamepadButtonFlags.Y);
+
+            if (state)
+            {
+                return true;
+            }
+            return false;
+        }
 
 
         void SetActive()
@@ -391,6 +486,7 @@ namespace ControllerToMouse.Backend
             return 0;
         }
 
+        // Get raw input from the right stick
         int GetRightStickYRaw()
         {
             if (Status.RightThumbY > 0)
@@ -398,6 +494,34 @@ namespace ControllerToMouse.Backend
                 return 1;
             }
             else if (Status.RightThumbY < 0)
+            {
+                return -1;
+            }
+            return 0;
+        }
+
+        // Get raw input from the left stick
+        int GetLeftStickXRaw()
+        {
+            if (Status.LeftThumbX > 0)
+            {
+                return 1;
+            }
+            else if (Status.LeftThumbX < 0)
+            {
+                return -1;
+            }
+            return 0;
+        }
+
+        // Get raw input from the left stick.
+        int GetLeftStickYRaw()
+        {
+            if (Status.LeftThumbY > 0)
+            {
+                return 1;
+            }
+            else if (Status.LeftThumbY < 0)
             {
                 return -1;
             }

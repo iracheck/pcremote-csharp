@@ -24,12 +24,12 @@ namespace ControllerToMouse.Utils
         // Increase and Decrease volume may seem counterintuitive because you can't specify the amount, however controllers do not have this feature.
         public static void IncreaseVolume()
         {
-            if (AudioDeviceExists()) SetRelativeVolume(GlobalSettings.audioStep);
+            if (AudioDeviceExists()) SetRelativeVolume(GlobalSettings.AudioStep);
         }
 
         public static void DecreaseVolume()
         {
-            if (AudioDeviceExists()) SetRelativeVolume(-GlobalSettings.audioStep);
+            if (AudioDeviceExists()) SetRelativeVolume(-GlobalSettings.AudioStep);
         }
 
         // Changes the relative volume according to its current value [volume (50) + step (5) = newVolume (55)]

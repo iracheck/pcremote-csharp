@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Threading;
 
-using ControllerToMouse.Backend;
+using ControllerToMouse.Devices;
 using ControllerToMouse.Utils;
 using WindowsInput.Native;
 using ControllerToMouse.Settings;
@@ -18,8 +18,7 @@ namespace ControllerToMouse
     {
         static void Main(string[] args)
         {
-            InputDevice test = new InputDevice();
-            test.PollDevice();
+            InputDeviceManager.
         }
     }
 }

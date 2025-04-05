@@ -14,7 +14,7 @@ using System.Diagnostics;
 using ControllerToMouse.Settings;
 using ControllerToMouse.Utils;
 
-namespace ControllerToMouse.Backend
+namespace ControllerToMouse.Devices
 {
     internal class InputDevice
     {
@@ -70,11 +70,11 @@ namespace ControllerToMouse.Backend
         private const float MOUSE_ACCELERATION_RATE = 0.05f;
 
 
-        public InputDevice()
+        public InputDevice(UserIndex index)
         {
             Console.WriteLine("Creating new input device...");
 
-            Controller = new Controller(UserIndex.One);
+            Controller = new Controller(index);
 
             if (Controller.IsConnected == false) {
                 Console.WriteLine("No controller found.");
@@ -88,6 +88,7 @@ namespace ControllerToMouse.Backend
             Keyboard = Simulator.Keyboard;
             Mouse = Simulator.Mouse;
         }
+
 
         // Polls the device until polling is disabled or program is terminated
         public void PollDevice() 
@@ -134,7 +135,7 @@ namespace ControllerToMouse.Backend
         // Handles all mouse movements
         bool UpdateLeftStick()
         {
-            int mouseSensitivity = GlobalSettings.MouseSensitivity;
+            int mouseSensitivity = Settings.AppSettings.MouseSensitivity;
 
             // Get the input from each axis of the thumbstick, and then normalize it based off of the sensitivity given by the user.
             int lx = Status.LeftThumbX;
@@ -207,17 +208,17 @@ namespace ControllerToMouse.Backend
         {
             float deltaTime = LastAction.ElapsedMilliseconds;
 
-            if (!GetIsActive() && deltaTime > GlobalSettings.TimeBeforeSleep)
+            if (!GetIsActive() && deltaTime > Settings.AppSettings.TimeBeforeSleep)
             {
-                return GlobalSettings.SleepRefreshSpeed;
+                return Settings.AppSettings.SleepRefreshSpeed;
             }
-            else if (GlobalSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
+            else if (Settings.AppSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
             {
-                return GlobalSettings.BatterySaverRefreshSpeed;
+                return Settings.AppSettings.BatterySaverRefreshSpeed;
             }
             else
             {
-                return GlobalSettings.ActiveRefreshSpeed;
+                return Settings.AppSettings.ActiveRefreshSpeed;
             }
         }
 
@@ -405,6 +406,7 @@ namespace ControllerToMouse.Backend
         {
             return ButtonA() || ButtonB() || ButtonX() || ButtonY();
         }
+
 
         
         bool ButtonA()

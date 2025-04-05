@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ControllerToMouse.Settings
 {
     // Singleton class
-    internal static class GlobalSettings
+    internal static class AppSettings
     {
         // Properties that deal with controller sleep and system power use.
         public static int ActiveRefreshSpeed { get; set; } = 5;

@@ -63,11 +63,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Backend\InputDevice.cs" />
+    <Compile Include="Source\Backend\Devices\InputDevice.cs" />
     <Compile Include="Source\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Settings\GlobalSettings.cs" />
-    <Compile Include="Source\Settings\SettingsManager.cs" />
+    <Compile Include="Source\Backend\Settings\AppSettings.cs" />
     <Compile Include="Source\Utils\MathUtils.cs" />
     <Compile Include="Source\Utils\MediaUtils.cs" />
     <Compile Include="Source\Utils\MouseUtils.cs" />

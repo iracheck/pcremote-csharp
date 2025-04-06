@@ -72,9 +72,10 @@ namespace ControllerToMouse.Devices
 
         public InputDevice(UserIndex index)
         {
-            Console.WriteLine("Creating new input device...");
+            Console.WriteLine("Creating new input device with index {0}...", index);
 
-            Controller = new Controller(index);
+            Index = index;
+            Controller = new Controller(Index);
 
             if (Controller.IsConnected == false) {
                 Console.WriteLine("No controller found.");
@@ -89,22 +90,27 @@ namespace ControllerToMouse.Devices
             Mouse = Simulator.Mouse;
         }
 
+        public void BeginDeviceThread()
+        {
+            while (PollingActive) PollDevice();
+        }
+
 
         // Polls the device until polling is disabled or program is terminated
         public void PollDevice() 
         {
-            while (PollingActive) // This while loop is temporary before a more advanced method can be written
+            if (!Controller.IsConnected)
             {
-                Console.WriteLine("Polling controller " + Controller.UserIndex);
-                if (LastAction.IsRunning == false) LastAction.Start();
-
-                Status = Controller.GetState().Gamepad; // updates the status of all buttons/axes
-                Buttons = Controller.GetState().Gamepad.Buttons;
-
-                HandleInputs();
-
-                Thread.Sleep(CalculateSleepTime());
+                InputDeviceManager.RemoveDevice(Index);
             }
+            if (LastAction.IsRunning == false) LastAction.Start();
+
+            Status = Controller.GetState().Gamepad; // updates the status of all buttons/axes
+            Buttons = Controller.GetState().Gamepad.Buttons;
+
+            HandleInputs();
+
+            Thread.Sleep(CalculateSleepTime());
         }
 
 
@@ -534,6 +540,12 @@ namespace ControllerToMouse.Devices
                 return -1;
             }
             return 0;
+        }
+
+        // Returns whether the given user index has any controllers connected
+        public bool GetIsConnected()
+        {
+            return Controller.IsConnected;
         }
     }
 }

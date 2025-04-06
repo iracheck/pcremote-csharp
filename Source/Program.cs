@@ -18,7 +18,7 @@ namespace ControllerToMouse
     {
         static void Main(string[] args)
         {
-            InputDeviceManager.
+            InputDeviceManager.InitializeDevices();
         }
     }
 }

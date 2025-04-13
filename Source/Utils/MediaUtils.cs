@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AudioSwitcher.AudioApi;
 using WindowsInput.Native;
 
+using AudioSwitcher.AudioApi.CoreAudio;
+
 using ControllerToMouse.Settings;
 using ControllerToMouse.Utils;
 using WindowsInput;
@@ -15,8 +17,8 @@ namespace ControllerToMouse.Utils
 {
     internal static class MediaUtils
     {
-        static private AudioController AudioCntrl = new CoreAudioController();
-
+        static private CoreAudioController AudioController = new CoreAudioController();
+            
         static private InputSimulator InputSimulator = new InputSimulator();
 
         // Volume Functionality

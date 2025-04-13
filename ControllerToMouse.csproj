@@ -10,13 +10,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AudioSwitcher.AudioApi" Version="3.0.0" />
+    <PackageReference Include="AudioSwitcher.AudioApi.CoreAudio" Version="3.0.3" />
     <PackageReference Include="InputSimulator" Version="1.0.4.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
     <PackageReference Include="System.IO.Pipelines" Version="9.0.4" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
     <PackageReference Include="System.Text.Encodings.Web" Version="9.0.4" />
     <PackageReference Include="System.Text.Json" Version="9.0.4" />
   </ItemGroup>

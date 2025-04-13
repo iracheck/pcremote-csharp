@@ -17,12 +17,6 @@ namespace ControllerToMouse.Devices
         static Dictionary<UserIndex, InputDevice> ConnectedDevices = new Dictionary<UserIndex, InputDevice>();
         static Dictionary<UserIndex, Thread> DeviceThreads = new Dictionary<UserIndex, Thread>();
 
-        static InputDevice Device1;
-        static InputDevice Device2;
-        static InputDevice Device3;
-        static InputDevice Device4;
-
-
         // Search for connected XInput devices, and initialize them if possible.
         public static void InitializeDevices()
         {
@@ -35,10 +29,8 @@ namespace ControllerToMouse.Devices
                 {
                     Console.WriteLine("Creating new device with index {0}", index);
 
-                    // Assert that the device is connected
                     ConnectedDevices[index] = device;
 
-                    // Spin up a new thread
                     Thread handlerThread = new Thread(device.BeginDeviceThread);
                     DeviceThreads[index] = handlerThread;
                     handlerThread.Start();
@@ -53,20 +45,44 @@ namespace ControllerToMouse.Devices
             }
         }
 
-        // Safely removes a device from circulation, freeing up not only the thread but also removing 
+        // Safely removes a device from circulation, freeing up the thread.
         public static int RemoveDevice(UserIndex index)
         {
-            if (!ConnectedDevices.ContainsKey(index))
+            if (!ConnectedDevices.ContainsKey(index) || !DeviceThreads.ContainsKey(index))
             {
-                return 0;
+                return -1;
             }
 
+            ConnectedDevices[index].ShutdownDeviceThread();
             ConnectedDevices.Remove(index);
 
             DeviceThreads[index].Join();
             DeviceThreads.Remove(index);
 
-            return 1;
+            return 0;
+        }
+
+        // Important to in all cases use this in a try catch statement. If the controller does not exist it will throw an error
+        public static InputDevice GetDevice(UserIndex index)
+        {
+            if (index == UserIndex.Any)
+            {
+                return ConnectedDevices[0];
+            }
+
+            if (ConnectedDevices.ContainsKey(index))
+            {
+                return ConnectedDevices[index];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static int GetDeviceCount()
+        {
+            return ConnectedDevices.Count;
         }
     }
 }

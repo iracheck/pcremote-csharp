@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AudioSwitcher.AudioApi.CoreAudio;
+using AudioSwitcher.AudioApi;
 using WindowsInput.Native;
 
 using ControllerToMouse.Settings;
@@ -15,7 +15,7 @@ namespace ControllerToMouse.Utils
 {
     internal static class MediaUtils
     {
-        static private CoreAudioController AudioController = new CoreAudioController();
+        static private AudioController AudioCntrl = new CoreAudioController();
 
         static private InputSimulator InputSimulator = new InputSimulator();
 
@@ -24,25 +24,25 @@ namespace ControllerToMouse.Utils
         // Increase and Decrease volume may seem counterintuitive because you can't specify the amount, however controllers do not have this feature.
         public static void IncreaseVolume()
         {
-            if (AudioDeviceExists()) SetRelativeVolume(Settings.AppSettings.AudioStep);
+            if (AudioDeviceExists()) SetRelativeVolume(Settings.AppSettings.Get().AudioStep);
         }
 
         public static void DecreaseVolume()
         {
-            if (AudioDeviceExists()) SetRelativeVolume(-Settings.AppSettings.AudioStep);
+            if (AudioDeviceExists()) SetRelativeVolume(-Settings.AppSettings.Get().AudioStep);
         }
 
         // Changes the relative volume according to its current value [volume (50) + step (5) = newVolume (55)]
-        private static void SetRelativeVolume(float step)
+        private static void SetRelativeVolume(int step)
         {
-            float newVolume = (float)GetVolume() + step;
+            int newVolume = (int)GetVolume() + step;
             newVolume = MathUtils.Clamp(newVolume, 0, 100);
 
             if (AudioDeviceExists()) AudioController.DefaultPlaybackDevice.Volume = newVolume;
         }
 
         // Sets the volume to this exact value.
-        private static void SetExactVolume(float newVolume)
+        private static void SetExactVolume(int newVolume)
         {
             newVolume = MathUtils.Clamp(newVolume, 0, 100);
             if (AudioDeviceExists()) AudioController.DefaultPlaybackDevice.Volume = newVolume;

@@ -7,79 +7,73 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Text.Json;
+
 namespace ControllerToMouse.Settings
 {
     // Singleton class
     internal static class AppSettings
     {
-        // Properties that deal with controller sleep and system power use.
-        public static int ActiveRefreshSpeed { get; set; } = 5;
+        static string FilePath = "settings/appsettings.json";
+        static AppSettingsData Data = new AppSettingsData();
 
-        public static int SleepRefreshSpeed { get; set; } = 100;
+        // Returns the data source for App Settings
+        public static AppSettingsData Get() {  return Data; }
 
-        public static int BatterySaverRefreshSpeed { get; set; } = 20;
-
-        public static int TimeBeforeSleep { get; set; } = 30000; // 30 seconds
-
-        public static bool IdleSleepEnabled { get; set; } = true;
-
-        public static bool BatterySaverEnabled { get; set; } = true;
-
-
-        // Mouse Settings
-        public static int MouseSensitivity { get; set; } = 2000;
-
-
-        // Blacklist settings
-        public static bool BlacklistEnabled { get; set; } = false;
-
-
-        // Media Control settings
-        public static float AudioStep { get; set; } = 5.0f;
-
-
-        // GUI
-        public static bool DarkMode { get; set; } = false;
+        // File Saving and Loading
+        public static void SaveToFile()
+        {
+            try
+            {
+                string serializedJson = JsonSerializer.Serialize(Data);
+                File.WriteAllText(FilePath, serializedJson);
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine("There was an error saving AppSettingsData to json. Error Message: " + e.Message);
+            }
+        }
 
 
 
-        // Methods begin
 
+
+
+        // Data modification
         public static void SetTimeBeforeSleep(int seconds)
         {
-            TimeBeforeSleep = seconds * 1000; // converts to milliseconds
+            Get().TimeBeforeSleep = seconds * 1000; // converts to milliseconds
         }
 
         public static void SetTimeBeforeSleep(int minutes, int seconds)
         {
-            TimeBeforeSleep = minutes * 60 * 1000 + seconds * 1000; // converts to milliseconds
+            Get().TimeBeforeSleep = minutes * 60 * 1000 + seconds * 1000; // converts to milliseconds
         }
 
-        public static List<string> BlacklistedApplications { get; } = new List<string>();
-
+        // Blacklist
         public static bool AddToBlacklist(string app)
         {
-            if (BlacklistedApplications.Contains(app)) return false;
+            if (Get().BlacklistedApplications.Contains(app)) return false;
             else
             {
-                BlacklistedApplications.Add(app);
+                Get().BlacklistedApplications.Add(app);
                 return true;
             }
         }
 
         public static bool RemoveFromBlacklist(string app)
         {
-            if (!BlacklistedApplications.Contains(app)) return false;
+            if (!Get().BlacklistedApplications.Contains(app)) return false;
             else
             {
-                BlacklistedApplications.Remove(app);
+                Get().BlacklistedApplications.Remove(app);
                 return true;
             }
         }
 
-        public static bool IsInBlacklist(string app)
+        public static bool IsBlacklisted(string app)
         {
-            if (BlacklistedApplications.Contains(app))
+            if (Get().BlacklistedApplications.Contains(app))
             {
                 return true;
             }

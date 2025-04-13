@@ -11,6 +11,7 @@ using ControllerToMouse.Devices;
 using ControllerToMouse.Utils;
 using WindowsInput.Native;
 using ControllerToMouse.Settings;
+using SharpDX.XInput;
 
 namespace ControllerToMouse
 {
@@ -19,6 +20,8 @@ namespace ControllerToMouse
         static void Main(string[] args)
         {
             InputDeviceManager.InitializeDevices();
+
+            AppSettings.SaveToFile();
         }
     }
 }

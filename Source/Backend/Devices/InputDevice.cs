@@ -95,6 +95,11 @@ namespace ControllerToMouse.Devices
             while (PollingActive) PollDevice();
         }
 
+        public void ShutdownDeviceThread()
+        {
+            PollingActive = false; // safely stops the thread
+        }
+
 
         // Polls the device until polling is disabled or program is terminated
         public void PollDevice() 
@@ -141,7 +146,7 @@ namespace ControllerToMouse.Devices
         // Handles all mouse movements
         bool UpdateLeftStick()
         {
-            int mouseSensitivity = Settings.AppSettings.MouseSensitivity;
+            int mouseSensitivity = 3000;
 
             // Get the input from each axis of the thumbstick, and then normalize it based off of the sensitivity given by the user.
             int lx = Status.LeftThumbX;
@@ -149,9 +154,9 @@ namespace ControllerToMouse.Devices
 
             LeftStickMoved = lx > 0 || ly > 0;
 
-            // Adjust for the sensitivity of the mouse
-            lx /= mouseSensitivity;
-            ly /= mouseSensitivity;
+            // Adjust for the sensitivity of the mouse. Then normalize due to the sheer magnitude of lx/ly
+            lx *= (mouseSensitivity / 1000);
+            ly *= (mouseSensitivity / 1000);
 
             if (lx != 0 || ly != 0)
             {
@@ -203,7 +208,7 @@ namespace ControllerToMouse.Devices
             }
 
             // Ensures mouse speed does not go above 100% or below 0%
-            calculatedSpeed = MathUtils.Clamp(calculatedSpeed, 0, 1);
+            calculatedSpeed = MathUtils.Clampf(calculatedSpeed, 0, 1);
 
             MouseSpeed = calculatedSpeed;
         }
@@ -214,17 +219,17 @@ namespace ControllerToMouse.Devices
         {
             float deltaTime = LastAction.ElapsedMilliseconds;
 
-            if (!GetIsActive() && deltaTime > Settings.AppSettings.TimeBeforeSleep)
+            if (!GetIsActive() && deltaTime > Settings.AppSettings.Get().TimeBeforeSleep)
             {
-                return Settings.AppSettings.SleepRefreshSpeed;
+                return Settings.AppSettings.Get().SleepRefreshSpeed;
             }
-            else if (Settings.AppSettings.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
+            else if (Settings.AppSettings.Get().BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
             {
-                return Settings.AppSettings.BatterySaverRefreshSpeed;
+                return Settings.AppSettings.Get().BatterySaverRefreshSpeed;
             }
             else
             {
-                return Settings.AppSettings.ActiveRefreshSpeed;
+                return Settings.AppSettings.Get().ActiveRefreshSpeed;
             }
         }
 

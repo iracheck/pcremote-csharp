@@ -9,8 +9,10 @@ using System.Threading;
 
 using ControllerToMouse.Devices;
 using ControllerToMouse.Utils;
-using WindowsInput.Native;
+using ControllerToMouse.Meta;
 using ControllerToMouse.Settings;
+
+using WindowsInput.Native;
 using SharpDX.XInput;
 
 namespace ControllerToMouse
@@ -19,9 +21,14 @@ namespace ControllerToMouse
     {
         static void Main(string[] args)
         {
+            FilePaths.EnsureDirectoriesExist();
+
             InputDeviceManager.InitializeDevices();
 
-            AppSettings.SaveToFile();
+            AppSettings.Load();
+            AppSettings.Save();
+
+            Console.WriteLine(AppSettings.Sleep.TimeBeforeSleep);
         }
     }
 }

@@ -219,17 +219,17 @@ namespace ControllerToMouse.Devices
         {
             float deltaTime = LastAction.ElapsedMilliseconds;
 
-            if (!GetIsActive() && deltaTime > Settings.AppSettings.Get().TimeBeforeSleep)
+            if (!GetIsActive() && deltaTime > AppSettings.Sleep.TimeBeforeSleep)
             {
-                return Settings.AppSettings.Get().SleepRefreshSpeed;
+                return AppSettings.Sleep.SleepRefreshSpeed;
             }
-            else if (Settings.AppSettings.Get().BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
+            else if (AppSettings.Sleep.BatterySaverEnabled && BatteryUtils.IsOnBatterySaver())
             {
-                return Settings.AppSettings.Get().BatterySaverRefreshSpeed;
+                return AppSettings.Sleep.BatterySaverRefreshSpeed;
             }
             else
             {
-                return Settings.AppSettings.Get().ActiveRefreshSpeed;
+                return AppSettings.Sleep.ActiveRefreshSpeed;
             }
         }
 

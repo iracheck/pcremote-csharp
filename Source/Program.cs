@@ -27,8 +27,6 @@ namespace ControllerToMouse
 
             AppSettings.Load();
             AppSettings.Save();
-
-            Console.WriteLine(AppSettings.Sleep.TimeBeforeSleep);
         }
     }
 }

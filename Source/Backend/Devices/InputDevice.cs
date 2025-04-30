@@ -101,7 +101,8 @@ namespace ControllerToMouse.Devices
         }
 
 
-        // Polls the device until polling is disabled or program is terminated
+        // Polls the device until polling is disabled or program is terminated. 
+        // This should be run within its own thread.
         public void PollDevice() 
         {
             if (!Controller.IsConnected)

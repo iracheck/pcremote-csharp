@@ -10,18 +10,18 @@ namespace ControllerToMouse.GUI
         public MainWindow()
         {
             InitializeComponent();
-            Debug.WriteLine("MainWindow loaded.");
         }
 
-        private void StartController_Click(object sender, RoutedEventArgs e)
+        private void Devices_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Starting controller service...");
-            InputDeviceManager.InitializeDevices();
         }
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        private void Profiles_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

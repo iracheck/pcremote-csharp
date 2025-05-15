@@ -25,4 +25,7 @@
   <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\GUI\Graphics\" />
+  </ItemGroup>
 </Project>

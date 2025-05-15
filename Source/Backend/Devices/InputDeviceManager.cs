@@ -80,6 +80,14 @@ namespace ControllerToMouse.Devices
             }
         }
 
+        public static void RemoveAllDevices()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                RemoveDevice((UserIndex)i);
+            }
+        }
+
         public static int GetDeviceCount()
         {
             return ConnectedDevices.Count;

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ControllerToMouse.Devices;
+using ControllerToMouse.Meta;
+using ControllerToMouse.Settings;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,46 +14,25 @@ namespace ControllerToMouse
 {
     public partial class App : Application
     {
-        Route route;
-        LidarCam camera1;
-        LidarCam camera2;
-
-        bool droneActive = true;
-
-        public static void InitializeDrone()
+        protected override void OnStartup(StartupEventArgs e)
         {
-            route = getRoute();
-            camera1 = getComponent<lidarCamera[0]>();
-            camera2 = getComponent<lidarCamera[1]>();
+            base.OnStartup(e);
 
-            if (route == null)
-            {
-                CreateNewRoute();
-            }
+            InputDeviceManager.InitializeDevices();
 
-            if (camera1 == null || camera2 == null)
-            {
-                Console.WriteLine("Camera is not functioning. Please check the drone");
-            }
+            // Save and reload the app settings, to ensure they exist and are valid
+            AppSettings.Load();
+            AppSettings.Save();
+
+            // Ensure all program directories exist in %appdata%
+            FilePaths.EnsureDirectoriesExist();
         }
 
-        public static bool CollisionAvoidance()
+        protected override void OnExit(ExitEventArgs e)
         {
-            CameraMap cameramap = getCameraMap();
+            base.OnExit(e);
 
-            if (cameramap.getCollisionLocations().length != 0)
-            {
-                for (int i = 0; i < cameramap.getCollisionLocations().length; i++)
-                {
-                    if (cameramap.getCollisionLocations()[i].isOnRoute())
-                    {
-                        return false;
-                    }
-                    else return true;
-                }
-            }
-
-            Sleep(0.5);
+            InputDeviceManager.RemoveAllDevices();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace ControllerToMouse.Utils
 {
+    // This class handles system and controller-level battery
     internal static class BatteryUtils
     {
         // Imported class from Windows API

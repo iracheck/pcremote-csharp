@@ -18,10 +18,22 @@ namespace ControllerToMouse.Devices
 {
     internal class InputDevice
     {
+        // Outward-Facing Controller Information
+        public String Name { set; get; } = "Input Device";
+        public String SerialNumber { set; get; } = "0";
+
+        public String ProfileName { set; get; } = "Default Profile";
+
+        public bool isBatteryPowered = false;
+        public int batteryLevel = 0;
+
+
         // External Library Hooks
         Controller Controller;
         Gamepad Status;
         GamepadButtonFlags Buttons;
+
+        BatteryDeviceType BatteryInfo;
 
         InputSimulator Simulator;
         IMouseSimulator Mouse;

@@ -13,14 +13,17 @@ namespace ControllerToMouse.Devices
 {
     static class InputDeviceManager
     {
+        public const int MAX_CONTROLLERS = 4;
+
         // Keep track of all four maximum connected devices
         static Dictionary<UserIndex, InputDevice> ConnectedDevices = new Dictionary<UserIndex, InputDevice>();
         static Dictionary<UserIndex, Thread> DeviceThreads = new Dictionary<UserIndex, Thread>();
 
+
         // Search for connected XInput devices, and initialize them if possible.
         public static void InitializeDevices()
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < MAX_CONTROLLERS; i++)
             {
                 UserIndex index = (UserIndex)i; // Remember this for later! Cast an enum (UserIndex) using an int
                 InputDevice device = new InputDevice(index);
@@ -80,11 +83,25 @@ namespace ControllerToMouse.Devices
             }
         }
 
+        public static InputDevice GetDevice(int intIndex)
+        {
+            UserIndex index = (UserIndex)intIndex;
+
+            if (ConnectedDevices.ContainsKey(index))
+            {
+                return ConnectedDevices[index];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static void RemoveAllDevices()
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < MAX_CONTROLLERS; i++)
             {
-                RemoveDevice((UserIndex)i);
+                RemoveDevice((UserIndex)i); // safely removes a device
             }
         }
 

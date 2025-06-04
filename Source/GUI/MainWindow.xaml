@@ -4,6 +4,7 @@
         Title="Controller to Mouse" Width="1440" Height="810" 
         MinWidth="640" MinHeight="360" MaxWidth="1920" MaxHeight="1080"
         WindowStartupLocation="CenterScreen"
+        Closed="OnExit"
         WindowStyle="ThreeDBorderWindow"
         Background="White">
     <Window.Resources>

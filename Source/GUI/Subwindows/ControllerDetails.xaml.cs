@@ -27,6 +27,13 @@ namespace ControllerToMouse.GUI
         {
             InitializeComponent();
 
+            ReloadDevices();
+        }
+
+        public void ReloadDevices()
+        {
+            InputDeviceManager.InitializeDevices(); // gets all currently connected USB Xinput devices
+
             ControllersPanel.Children.Clear();
 
             for (int i = 0; i < InputDeviceManager.MAX_CONTROLLERS; i++)

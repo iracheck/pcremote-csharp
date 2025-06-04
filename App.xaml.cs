@@ -18,21 +18,21 @@ namespace ControllerToMouse
         {
             base.OnStartup(e);
 
-            InputDeviceManager.InitializeDevices();
-
             // Save and reload the app settings, to ensure they exist and are valid
             AppSettings.Load();
             AppSettings.Save();
 
             // Ensure all program directories exist in %appdata%
             FilePaths.EnsureDirectoriesExist();
+
+            // Get any connected USB devices
+            InputDeviceManager.InitializeDevices();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            base.OnExit(e);
-
             InputDeviceManager.RemoveAllDevices();
+            base.OnExit(e);
         }
     }
 }

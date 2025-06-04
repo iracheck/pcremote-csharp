@@ -4,6 +4,7 @@ using System.Diagnostics;
 using ControllerToMouse.Devices;
 using SharpDX.XInput;
 using ControllerToMouse.GUI.UserControls;
+using System;
 namespace ControllerToMouse.GUI
 {
     public partial class MainWindow : Window
@@ -11,9 +12,6 @@ namespace ControllerToMouse.GUI
         public MainWindow()
         {
             InitializeComponent();
-
-            // Initializes any active controllers
-            ReloadDevices();
         }
 
         private void Devices_Click(object sender, RoutedEventArgs e)
@@ -31,12 +29,7 @@ namespace ControllerToMouse.GUI
             MainContent.Content = new Settings();
         }
 
-        private void ReloadDevices()
-        {
-            InputDeviceManager.InitializeDevices();
-        }
-
-        protected void OnExit(ExitEventArgs e)
+        protected void OnExit(object sender, EventArgs e)
         {
             InputDeviceManager.RemoveAllDevices();
             base.OnClosed(e);

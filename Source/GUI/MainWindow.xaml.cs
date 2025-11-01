@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 using ControllerToMouse.Devices;
 using SharpDX.XInput;
-using ControllerToMouse.GUI.UserControls;
 using System;
 namespace ControllerToMouse.GUI
 {
@@ -14,25 +13,21 @@ namespace ControllerToMouse.GUI
             InitializeComponent();
         }
 
-        private void Devices_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new ControllerDetails();
-        }
-
-        private void Profiles_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new Profiles();
-        }
-
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new Settings();
-        }
-
         protected void OnExit(object sender, EventArgs e)
         {
             InputDeviceManager.RemoveAllDevices();
             base.OnClosed(e);
         }
+
+        protected void MinimizeButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void CloseButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

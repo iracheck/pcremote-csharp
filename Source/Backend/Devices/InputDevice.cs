@@ -107,6 +107,7 @@ namespace ControllerToMouse.Devices
             while (PollingActive) PollDevice();
         }
 
+        // This does not actually "shut it down," it lets it finish what it was doing on that given frame and *then* stops!
         public void ShutdownDeviceThread()
         {
             PollingActive = false; // safely stops the thread
@@ -253,6 +254,8 @@ namespace ControllerToMouse.Devices
         {
             int rx = GetRightStickXRaw();
             int ry = GetRightStickYRaw();
+
+            
 
             if ((rx != 0 || ry != 0) && !RightStickMoved)
             {

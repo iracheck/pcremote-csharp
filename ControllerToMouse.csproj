@@ -7,6 +7,12 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Source\GUI\Graphics\**" />
+    <EmbeddedResource Remove="Source\GUI\Graphics\**" />
+    <None Remove="Source\GUI\Graphics\**" />
+    <Page Remove="Source\GUI\Graphics\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="project.gitignore" />
   </ItemGroup>
   <ItemGroup>
@@ -24,16 +30,5 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="App.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\GUI\Graphics\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Source\GUI\Subwindows\Settings.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Source\GUI\Subwindows\Profiles.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 </Project>

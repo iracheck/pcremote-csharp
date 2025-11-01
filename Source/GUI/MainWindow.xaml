@@ -2,50 +2,76 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Controller to Mouse" Width="900" Height="750" 
-        MinWidth="640" MinHeight="360" MaxWidth="1920" MaxHeight="1080"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Closed="OnExit"
+        Topmost="True"
         AllowsTransparency="True"
         WindowStyle="None">
 
-    <Border Background="{StaticResource AppBackgroundBrush}">
+    <Border Background="{StaticResource AppBackgroundBrush}"
+            BorderBrush="{StaticResource SurfaceBackgroundBrush}"
+            
+            BorderThickness="3"
+            >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
+
             </Grid.RowDefinitions>
+            <!-- Program Bar (name, minimize, drag, exit, etc)-->
             <Border 
                 Grid.Row="0"
                 Background="{StaticResource AppBackgroundBrush}"
-                BorderBrush="{StaticResource SurfaceBackgroundBrush}"
-                BorderThickness="1">
+                BorderThickness="0 1 0 0"
+                MouseLeftButtonDown="HeaderMouseButton_Down">
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Header2Style}" Margin="10 0 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Style="{StaticResource Header2Style}" Margin="10 0 0 0">
                         <TextBlock.Text>Controller-to-Mouse</TextBlock.Text>
                         <TextBlock.VerticalAlignment>Center</TextBlock.VerticalAlignment>
                     </TextBlock>
-                    
-                    <TextBlock Style="{StaticResource SecondaryTextStyle}" Margin="2 5 0 0">
+
+                    <TextBlock Grid.Column="1" Style="{StaticResource SecondaryTextStyle}" Margin="3,13,0,0">
                         <TextBlock.Text>v0.2</TextBlock.Text>
-                        <TextBlock.VerticalAlignment>Center</TextBlock.VerticalAlignment>
+                        <TextBlock.VerticalAlignment>Top</TextBlock.VerticalAlignment>
                     </TextBlock>
 
                     <Rectangle Fill="Transparent"></Rectangle>
 
-                    <Button Content="—" 
+                    <Button Grid.Column="2" Content="—" 
                             Width="40" 
                             Height="40" 
                             Style="{StaticResource WindowControlButton}" 
                             Click="MinimizeButton_Click"/>
 
-                    <Button Content="—" 
+                    <Button Grid.Column="3" Content="X" 
                             Width="40" 
                             Height="40" 
                             Style="{StaticResource WindowControlButton}" 
-                            Click="MinimizeButton_Click"/>
-                </StackPanel>
+                            Click="ExitButton_Click"/>
+                </Grid>
+            </Border>
+            
+            <!-- Menu Bar (choose tab) -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" Background="{StaticResource HeaderBackgroundBrush}">
+                <Button Content="DEVICES" Style="{StaticResource TabButtonStyle}" Tag="Active" x:Name="DevicesTab" Click="MenuButtonClick"/>
+                <Button Content="PROFILES" Style="{StaticResource TabButtonStyle}" x:Name="ProfilesTab" Click="MenuButtonClick"/>
+                <Button Content="SETTINGS" Style="{StaticResource TabButtonStyle}" x:Name="SettingsTab" Click="MenuButtonClick"/>
+            </StackPanel>
+
+            <!-- Content UserControl -->
+            <Border Grid.Row="2">
+                <UserControl x:Name="ContentArea"></UserControl>
             </Border>
         </Grid>
     </Border>

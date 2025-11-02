@@ -1,4 +1,5 @@
-﻿using ControllerToMouse.Source.GUI.Submenus;
+﻿using ControllerToMouse.Devices;
+using ControllerToMouse.Source.GUI.Submenus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using InputDevice = ControllerToMouse.Devices.InputDevice;
 
 namespace ControllerToMouse.Source.GUI.UserControls
 {
@@ -21,9 +23,11 @@ namespace ControllerToMouse.Source.GUI.UserControls
     /// </summary>
     public partial class ControllerCard : UserControl
     {
-        public ControllerCard()
+        public ControllerCard(InputDevice device)
         {
             InitializeComponent();
+
+            this.ControllerName.Text = device.Name;
         }
     }
 }

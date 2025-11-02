@@ -25,16 +25,19 @@
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
 
-                <TextBlock Text="Controller Name" 
-                           FontSize="16" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBlock Text="Controller Name" x:Name="ControllerName"
+                           FontSize="16" FontWeight="SemiBold" Margin="0,0,0,5" TextTrimming="CharacterEllipsis"/>
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
 
                     <Ellipse Width="8" Height="8" Margin="0,0,5,0" Fill="Green" VerticalAlignment="Center"/>
 
-                    <TextBlock Text="{Binding Status, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource SecondaryTextStyle}" Margin="0,0,5,0"/>
-                    <TextBlock Text="| Active" Style="{StaticResource SecondaryTextStyle}"/>
-                    <TextBlock Text="{Binding BatteryLevel, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBlock Text="Connected" Style="{StaticResource SecondaryTextStyle}"/>
+
+                    <TextBlock Margin="20, 0, 5, 0" Text="[BATTERY-LEVEL]" Style="{StaticResource SecondaryTextStyle}"/>
+
+                    <TextBlock Margin="20, 0, 5, 0" Text="[CURRENT-PROFILE]" Style="{StaticResource SecondaryTextStyle}"/>
+
                 </StackPanel>
 
             </StackPanel>

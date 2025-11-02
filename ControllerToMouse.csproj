@@ -13,6 +13,7 @@
     <Page Remove="Source\GUI\Graphics\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\battery_high.png" />
     <None Remove="Resources\Images\xbox_controller.png" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +36,7 @@
     <Page Include="App.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\battery_high.png" />
     <Resource Include="Resources\Images\xbox_controller.png" />
   </ItemGroup>
 </Project>

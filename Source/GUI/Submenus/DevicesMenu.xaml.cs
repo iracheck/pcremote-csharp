@@ -40,7 +40,7 @@ namespace ControllerToMouse.Source.GUI.Submenus
                 if (device == null) continue;
                 else
                 {
-                    ControllerCard card = new ControllerCard();
+                    ControllerCard card = new ControllerCard(device);
 
                     ControllerCardList.Children.Add(card);
                 }

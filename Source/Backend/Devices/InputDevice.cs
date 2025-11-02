@@ -16,7 +16,7 @@ using ControllerToMouse.Utils;
 
 namespace ControllerToMouse.Devices
 {
-    internal class InputDevice
+    public class InputDevice
     {
         // Outward-Facing Controller Information
         public String Name { set; get; } = "Input Device";

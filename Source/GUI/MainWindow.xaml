@@ -18,6 +18,7 @@
                 <RowDefinition Height="40"></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="25"></RowDefinition>
 
             </Grid.RowDefinitions>
             <!-- Program Bar (name, minimize, drag, exit, etc)-->
@@ -71,6 +72,11 @@
             <!-- Content UserControl -->
             <Border Grid.Row="2">
                 <UserControl x:Name="ContentArea"></UserControl>
+            </Border>
+
+            <!-- Status -->
+            <Border Padding="5" Grid.Row="3" Background="{StaticResource SurfaceBackgroundBrush}">
+                <TextBlock>[STATUS-MESSAGE]</TextBlock>
             </Border>
         </Grid>
     </Border>

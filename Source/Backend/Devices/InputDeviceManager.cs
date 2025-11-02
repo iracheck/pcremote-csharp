@@ -8,6 +8,7 @@ using System.Threading;
 using ControllerToMouse.Settings;
 using ControllerToMouse.Devices;
 using SharpDX.XInput;
+using System.Diagnostics;
 
 namespace ControllerToMouse.Devices
 {
@@ -30,7 +31,7 @@ namespace ControllerToMouse.Devices
 
                 if (!ConnectedDevices.ContainsKey(index) && device.GetIsConnected())
                 {
-                    Console.WriteLine("Creating new device with index {0}", index);
+                    Trace.WriteLine("Creating new device with index " + index);
 
                     ConnectedDevices[index] = device;
 
@@ -44,7 +45,7 @@ namespace ControllerToMouse.Devices
                     RemoveDevice(index);
                 }
 
-                // may need to implement some more robust checking to ensure that a thread does not exist for a controller that technically doesn't
+                // may need to implement some more robust checking to ensure that a thread does not exist for a controller that isnt connected
             }
         }
 

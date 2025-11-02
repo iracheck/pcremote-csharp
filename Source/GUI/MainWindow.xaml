@@ -5,14 +5,13 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Closed="OnExit"
-        Topmost="True"
         AllowsTransparency="True"
         WindowStyle="None">
 
     <Border Background="{StaticResource AppBackgroundBrush}"
             BorderBrush="{StaticResource SurfaceBackgroundBrush}"
             
-            BorderThickness="3"
+            BorderThickness="2"
             >
         <Grid>
             <Grid.RowDefinitions>
@@ -36,7 +35,7 @@
                         <ColumnDefinition Width="40"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Style="{StaticResource Header2Style}" Margin="10 0 0 0">
+                    <TextBlock Grid.Column="0" Style="{StaticResource TopbarHeaderStyle}" Margin="10 0 0 0">
                         <TextBlock.Text>Controller-to-Mouse</TextBlock.Text>
                         <TextBlock.VerticalAlignment>Center</TextBlock.VerticalAlignment>
                     </TextBlock>
@@ -63,7 +62,7 @@
             </Border>
             
             <!-- Menu Bar (choose tab) -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" Background="{StaticResource HeaderBackgroundBrush}">
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 5 0 0" Background="{StaticResource HeaderBackgroundBrush}">
                 <Button Content="DEVICES" Style="{StaticResource TabButtonStyle}" Tag="Active" x:Name="DevicesTab" Click="MenuButtonClick"/>
                 <Button Content="PROFILES" Style="{StaticResource TabButtonStyle}" x:Name="ProfilesTab" Click="MenuButtonClick"/>
                 <Button Content="SETTINGS" Style="{StaticResource TabButtonStyle}" x:Name="SettingsTab" Click="MenuButtonClick"/>

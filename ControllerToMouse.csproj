@@ -13,6 +13,9 @@
     <Page Remove="Source\GUI\Graphics\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\xbox_controller.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="project.gitignore" />
   </ItemGroup>
   <ItemGroup>
@@ -30,5 +33,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\xbox_controller.png" />
   </ItemGroup>
 </Project>

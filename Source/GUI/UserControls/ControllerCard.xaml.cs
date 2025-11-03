@@ -2,6 +2,7 @@
 using ControllerToMouse.Source.GUI.Submenus;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,68 @@ namespace ControllerToMouse.Source.GUI.UserControls
     /// </summary>
     public partial class ControllerCard : UserControl
     {
+        InputDevice Device;
+
         public ControllerCard(InputDevice device)
         {
             InitializeComponent();
 
+            Device = device;
             this.ControllerName.Text = device.Name;
+        }
+
+        public void Update()
+        {
+            UpdateConnectionStatus();
+            UpdateBatteryStatus();
+         
+        }
+
+        public void UpdateConnectionStatus()
+        {
+            if (Device.GetIsAsleep())
+            {
+                ConnectionStatusColor.Fill = new SolidColorBrush(Colors.Gold);
+                ConnectionStatusText.Text = "Sleeping";
+            }
+            else if (Device.GetIsActive())
+            {
+                ConnectionStatusColor.Fill = new SolidColorBrush(Colors.Green);
+                ConnectionStatusText.Text = "Active";
+            }
+            else
+            {
+                ConnectionStatusColor.Fill = new SolidColorBrush(Colors.Green);
+                ConnectionStatusText.Text = "Connected";
+            }
+            
+        }
+
+        public void UpdateBatteryStatus()
+        {
+            
+            if (Device.isBatteryPowered)
+            {
+                BatteryLevelDisplay.Text = Device.batteryLevel.ToString() + "%";
+            }
+            else
+            {
+                BatteryLevelDisplay.Text = "N/A";
+            }
+
+        }
+
+        public void UpdateProfileStatus()
+        {
+            if (Device.isBatteryPowered)
+            {
+                BatteryLevelDisplay.Text = Device.batteryLevel.ToString();
+            }
+            else
+            {
+                BatteryLevelDisplay.Text = "N/A";
+            }
+
         }
     }
 }

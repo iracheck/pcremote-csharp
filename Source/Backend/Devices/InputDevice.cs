@@ -13,10 +13,11 @@ using System.Diagnostics;
 
 using ControllerToMouse.Settings;
 using ControllerToMouse.Utils;
+using System.ComponentModel;
 
 namespace ControllerToMouse.Devices
 {
-    public class InputDevice
+    public class InputDevice : INotifyPropertyChanged
     {
         // Outward-Facing Controller Information
         public String Name { set; get; } = "Input Device";
@@ -24,7 +25,7 @@ namespace ControllerToMouse.Devices
 
         public String ProfileName { set; get; } = "Default Profile";
 
-        public bool isBatteryPowered = false;
+        public bool isBatteryPowered => false;
         public int batteryLevel = 0;
 
 
@@ -102,6 +103,19 @@ namespace ControllerToMouse.Devices
             Mouse = Simulator.Mouse;
         }
 
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public void BeginDeviceThread()
         {
             while (PollingActive) PollDevice();
@@ -177,10 +191,11 @@ namespace ControllerToMouse.Devices
                 CalculateMouseSpeed(1);
 
                 // Calculate final x and y values of left stick
-                lx = (int)(lx * MouseSpeed);
-                ly = (int)(ly * MouseSpeed) * -1;
+                lx = (int)(Math.Clamp(lx , -5, 5) * MouseSpeed);
+                ly = (int)(Math.Clamp(ly, -5, 5) * -MouseSpeed);
 
                 Mouse.MoveMouseBy(lx, ly);
+                Trace.WriteLine(lx.ToString() + " " + ly.ToString());
                 return true;
             }
             else
@@ -497,6 +512,12 @@ namespace ControllerToMouse.Devices
         public bool GetIsActive()
         {
             return ControllerActive;
+        }
+
+        public bool GetIsAsleep()
+        {
+            if (CalculateSleepTime() == AppSettings.Sleep.SleepRefreshSpeed) return true;
+            else return false;
         }
 
 

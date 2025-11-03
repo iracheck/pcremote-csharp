@@ -28,17 +28,23 @@
                 <TextBlock Text="Controller Name" x:Name="ControllerName"
                            FontSize="16" FontWeight="SemiBold" Margin="0,0,0,5" TextTrimming="CharacterEllipsis"/>
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                    <Ellipse Width="8" Height="8" Margin="0,0,5,0" Fill="Green" VerticalAlignment="Center"/>
+                    <Ellipse Grid.Column="0" Width="8" Height="8" Margin="0,0,5,0" Fill="Green" VerticalAlignment="Center" x:Name="ConnectionStatusColor"/>
 
-                    <TextBlock Text="Connected" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBlock Grid.Column="1" Text="Connected" Style="{StaticResource SecondaryTextStyle}" x:Name="ConnectionStatusText"/>
 
-                    <TextBlock Margin="20, 0, 5, 0" Text="[BATTERY-LEVEL]" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBlock Grid.Column="2" Margin="0, 0, 5, 0" Text="100%" Style="{StaticResource SecondaryTextStyle}" x:Name="BatteryLevelDisplay"/>
 
-                    <TextBlock Margin="20, 0, 5, 0" Text="[CURRENT-PROFILE]" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBlock Grid.Column="3" Margin="0, 0, 5, 0" Text="[CURRENT-PROFILE]" Style="{StaticResource SecondaryTextStyle}" x:Name="CurrentProfileDisplay"/>
 
-                </StackPanel>
+                </Grid>
 
             </StackPanel>
 

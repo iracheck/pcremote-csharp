@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using ControllerToMouse.Source.GUI.UserControls;
+using System.Windows.Threading;
 
 namespace ControllerToMouse.Source.GUI.Submenus
 {
@@ -23,9 +24,31 @@ namespace ControllerToMouse.Source.GUI.Submenus
     /// </summary>
     public partial class DevicesMenu : UserControl
     {
+        public DispatcherTimer UpdateTimer = new DispatcherTimer();
+
         public DevicesMenu()
         {
             InitializeComponent();
+
+            UpdateTimer.Interval = TimeSpan.FromMilliseconds(250);
+
+            UpdateTimer.Tick += UpdateTimer_Tick;
+
+            UpdateTimer.Start();
+
+            LoadControllers();
+            UpdateTimer_Tick(null, null); // do the first tick immediately, just to ensure display accuracy.
+        }
+
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            foreach (var controller in ControllerCardList.Children)
+            {
+                if (controller is ControllerCard card)
+                {
+                    card.Update();
+                }
+            }
         }
 
         public void LoadControllers()

@@ -31,6 +31,8 @@ namespace ControllerToMouse.GUI
 
             ContentArea.Content = DeviceMenu;
 
+            VersionNumber.Text = "v" + Meta.BuildInfo.Version;
+
         }
 
         protected void MenuButtonClick(object sender, EventArgs e)

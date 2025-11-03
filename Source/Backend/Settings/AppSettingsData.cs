@@ -47,7 +47,7 @@ namespace ControllerToMouse.Settings
 
     internal class GUISettings
     {
-        public string Theme { get; set; } = "light_mode";
+        public string Theme { get; set; } = "no_theme";
     }
 
     internal class AudioControlSettings

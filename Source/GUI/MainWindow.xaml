@@ -41,7 +41,7 @@
                         <TextBlock.VerticalAlignment>Center</TextBlock.VerticalAlignment>
                     </TextBlock>
 
-                    <TextBlock Grid.Column="1" Style="{StaticResource SecondaryTextStyle}" Margin="3,13,0,0">
+                    <TextBlock Grid.Column="1" Style="{StaticResource SecondaryTextStyle}" Margin="3,13,0,0" x:Name="VersionNumber">
                         <TextBlock.Text>v0.2</TextBlock.Text>
                         <TextBlock.VerticalAlignment>Top</TextBlock.VerticalAlignment>
                     </TextBlock>

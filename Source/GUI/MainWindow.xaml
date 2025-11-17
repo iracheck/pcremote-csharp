@@ -76,7 +76,7 @@
 
             <!-- Status -->
             <Border Padding="5" Grid.Row="3" Background="{StaticResource SurfaceBackgroundBrush}">
-                <TextBlock>[STATUS-MESSAGE]</TextBlock>
+                <TextBlock x:Name="StatusMessage" Margin="0 1 0 -2" Style="{StaticResource SecondaryTextStyle}">[STATUS-MESSAGE]</TextBlock>
             </Border>
         </Grid>
     </Border>

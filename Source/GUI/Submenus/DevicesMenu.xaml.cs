@@ -24,23 +24,24 @@ namespace ControllerToMouse.Source.GUI.Submenus
     /// </summary>
     public partial class DevicesMenu : UserControl
     {
-        public DispatcherTimer UpdateTimer = new DispatcherTimer();
+        // Quick Actions
+        List<ctmAction> Actions = new List<ctmAction>()
+        { 
+            new ReloadControllersAction(),
+            new VibrationTest()
+        };
 
         public DevicesMenu()
         {
             InitializeComponent();
 
-            UpdateTimer.Interval = TimeSpan.FromMilliseconds(250);
-
-            UpdateTimer.Tick += UpdateTimer_Tick;
-
-            UpdateTimer.Start();
-
             LoadControllers();
-            UpdateTimer_Tick(null, null); // do the first tick immediately, just to ensure display accuracy.
+            LoadActions();
+
+            UpdateTimer_Tick(null, null); // do the first update tick on the first frame, to ensure information accuracy
         }
 
-        private void UpdateTimer_Tick(object sender, EventArgs e)
+        public void UpdateTimer_Tick(object sender, EventArgs e)
         {
             foreach (var controller in ControllerCardList.Children)
             {
@@ -70,14 +71,24 @@ namespace ControllerToMouse.Source.GUI.Submenus
             }
         }
 
+        public void LoadActions()
+        {
+            ActionList.Children.Clear();
+
+            foreach (var action in Actions)
+            {
+                QuickAction card = new QuickAction(action);
+
+                card.ActionName.Text = action.Name;
+                card.ActionDescription.Text = action.Description;
+
+                ActionList.Children.Add(card);
+            }
+        }
+
         public void Refresh_Click(object sender, RoutedEventArgs e)
         {
             LoadControllers();
-        }
-
-        public void UpdateDevices()
-        {
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

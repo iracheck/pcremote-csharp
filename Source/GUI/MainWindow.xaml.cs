@@ -1,4 +1,5 @@
 ﻿using ControllerToMouse.Devices;
+using ControllerToMouse.Source.GUI;
 using ControllerToMouse.Source.GUI.Submenus;
 using SharpDX.XInput;
 using System;
@@ -7,6 +8,9 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+
+
+
 namespace ControllerToMouse.GUI
 {
     public partial class MainWindow : Window
@@ -20,15 +24,16 @@ namespace ControllerToMouse.GUI
 
         private List<Button> NavButtons;
 
-        // status box locking
-        public bool StatusUpdateLocked = false;
-        private bool StatusUpdateShouldUnlock = false;
+        const float UPDATE_INTERVAL = 0.1f; // in seconds
 
         public MainWindow()
         {
             Trace.WriteLine("Init main window");
 
             InitializeComponent();
+
+            StatusBar.UpdateInterval = UPDATE_INTERVAL;
+            StatusBar.Target = StatusMessage;
 
             // Store nav buttons for later reference
             NavButtons = new List<Button>
@@ -45,37 +50,17 @@ namespace ControllerToMouse.GUI
             VersionNumber.Text = "v" + Meta.BuildInfo.Version;
 
             // Initialize the global timer that the program works with:
-            UpdateTimer.Interval = TimeSpan.FromSeconds(1);
+            UpdateTimer.Interval = TimeSpan.FromSeconds(0.1);
 
                 // the timer handles multiple things: most important of which is to update all of the devices on demand
             UpdateTimer.Tick += DeviceMenu.UpdateTimer_Tick;
 
                 // update the status box, too.
-            UpdateTimer.Tick += UpdateStatus;
+            UpdateTimer.Tick += StatusBar.Update;
 
             UpdateTimer.Start();
 
-            StatusUpdateLocked = true;
-            StatusMessage.Text = "TESTING 123";
-        }
-
-        protected void UpdateStatus(object sender, EventArgs e)
-        {
-            if (StatusUpdateLocked == true && StatusUpdateShouldUnlock == true)
-            {
-                StatusUpdateLocked = false;
-                return;
-            }
-            else if (StatusUpdateLocked == true && StatusUpdateShouldUnlock == false) {
-                StatusUpdateShouldUnlock = true;
-                return;
-            }
-            else
-            {
-                string statusText = "Connected Devices: " + InputDeviceManager.GetDeviceCount();
-
-                StatusMessage.Text = statusText;
-            }
+            StatusBar.Message("Test");
         }
 
         protected void MenuButtonClick(object sender, EventArgs e)

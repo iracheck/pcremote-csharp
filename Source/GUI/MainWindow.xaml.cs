@@ -50,7 +50,7 @@ namespace ControllerToMouse.GUI
             VersionNumber.Text = "v" + Meta.BuildInfo.Version;
 
             // Initialize the global timer that the program works with:
-            UpdateTimer.Interval = TimeSpan.FromSeconds(0.1);
+            UpdateTimer.Interval = TimeSpan.FromMilliseconds(100);
 
                 // the timer handles multiple things: most important of which is to update all of the devices on demand
             UpdateTimer.Tick += DeviceMenu.UpdateTimer_Tick;

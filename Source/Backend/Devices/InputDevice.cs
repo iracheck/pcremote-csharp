@@ -122,7 +122,7 @@ namespace ControllerToMouse.Devices
         }
 
         // This does not actually "shut it down," it lets it finish what it was doing on that given frame and *then* stops!
-        public void ShutdownDeviceThread()
+        public void PauseDeviceThread()
         {
             PollingActive = false; // safely stops the thread
         }
@@ -447,6 +447,18 @@ namespace ControllerToMouse.Devices
         bool PollButtons()
         {
             return ButtonA() || ButtonB() || ButtonX() || ButtonY();
+        }
+
+        public void Vibrate()
+        {
+            Vibration vib = new Vibration();
+            vib.RightMotorSpeed = 60000;
+            vib.LeftMotorSpeed = 60000;
+            Controller.SetVibration(vib);
+            Thread.Sleep(500);
+            vib.RightMotorSpeed = 0;
+            vib.LeftMotorSpeed = 0;
+            Controller.SetVibration(vib);
         }
 
 

@@ -17,7 +17,7 @@ namespace ControllerToMouse.Source.GUI
 
         public override void Activate()
         {
-            // nothing, for now
+            InputDeviceManager.GetDevice(0).Vibrate();
         }
     }
 }

@@ -21,6 +21,9 @@ namespace ControllerToMouse.Devices
         static Dictionary<UserIndex, Thread> DeviceThreads = new Dictionary<UserIndex, Thread>();
 
 
+        public static int ConnectedDeviceCount = 0;
+
+
         // Search for connected XInput devices, and initialize them if possible.
         public static void InitializeDevices()
         {
@@ -38,6 +41,7 @@ namespace ControllerToMouse.Devices
                     Thread handlerThread = new Thread(device.BeginDeviceThread);
                     DeviceThreads[index] = handlerThread;
                     handlerThread.Start();
+                    ConnectedDeviceCount += 1;
                 }
                 else if (ConnectedDevices.ContainsKey(index) && device.GetIsConnected() == false)
                 {
@@ -57,12 +61,15 @@ namespace ControllerToMouse.Devices
                 return -1;
             }
 
-            ConnectedDevices[index].ShutdownDeviceThread();
+            // first pause the thread to let it finish what it was doing
+            ConnectedDevices[index].PauseDeviceThread();
             ConnectedDevices.Remove(index);
-
+            
+            // then actually destroy the thread
             DeviceThreads[index].Join();
             DeviceThreads.Remove(index);
 
+            ConnectedDeviceCount -= 1;
             return 0;
         }
 

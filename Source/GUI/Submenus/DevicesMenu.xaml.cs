@@ -50,6 +50,11 @@ namespace ControllerToMouse.Source.GUI.Submenus
                     card.Update();
                 }
             }
+
+            if (ControllerCardList.Children.Count != InputDeviceManager.ConnectedDeviceCount)
+            {
+                LoadControllers();
+            }
         }
 
         public void LoadControllers()

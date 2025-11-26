@@ -32,7 +32,6 @@
             <Border 
                 Grid.Row="0"
                 Background="{StaticResource AppBackgroundBrush}"
-                BorderThickness="0 1 0 0"
                 MouseLeftButtonDown="HeaderMouseButton_Down"
                 >
 

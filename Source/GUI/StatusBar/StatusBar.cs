@@ -23,6 +23,8 @@ namespace ControllerToMouse.Source.GUI
     static class StatusBar
     {
         public static TextBlock Target; // this is the actual status bar, to be used 
+        
+        static bool CustomMessageActive = false;
 
         static float TimeRemaining;
         public static float UpdateInterval;
@@ -37,6 +39,8 @@ namespace ControllerToMouse.Source.GUI
         {
             Target.Text = message;
             TimeRemaining = length;
+
+            CustomMessageActive = true;
         }
 
         /// <summary>
@@ -57,6 +61,13 @@ namespace ControllerToMouse.Source.GUI
             {
                 Target.Text = "";
                 TimeRemaining = 0;
+
+                CustomMessageActive = false;
+            }
+
+            if (!CustomMessageActive)
+            {
+                Target.Text = InputDeviceManager.GetDeviceCount() + " device(s) connected.";
             }
         }
     }

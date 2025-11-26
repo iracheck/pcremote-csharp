@@ -10,7 +10,7 @@ namespace ControllerToMouse.Meta
     static class FilePaths
     {
         // Rename this when the app releases.
-        private const string AppName = "Controller To Mouse";
+        private const string AppName = "PCRemote";
 
         public static string BaseAppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName);
 

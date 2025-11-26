@@ -12,7 +12,7 @@
     <Border Background="{StaticResource AppBackgroundBrush}"
             BorderBrush="{StaticResource SurfaceBackgroundBrush}"
             
-            BorderThickness="2"
+            BorderThickness="1"
             Margin="20"
             >
 

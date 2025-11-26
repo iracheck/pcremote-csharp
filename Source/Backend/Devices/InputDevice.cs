@@ -17,7 +17,7 @@ using System.ComponentModel;
 
 namespace ControllerToMouse.Devices
 {
-    public class InputDevice : INotifyPropertyChanged
+    public class InputDevice
     {
         // Outward-Facing Controller Information
         public String Name { set; get; } = "Input Device";
@@ -25,8 +25,8 @@ namespace ControllerToMouse.Devices
 
         public String ProfileName { set; get; } = "Default Profile";
 
-        public bool isBatteryPowered => false;
-        public int batteryLevel = 0;
+        public bool IsBatteryPowered => false;
+        public int BatteryLevel = 0;
 
 
         // External Library Hooks
@@ -103,19 +103,6 @@ namespace ControllerToMouse.Devices
             Mouse = Simulator.Mouse;
         }
 
-        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public void BeginDeviceThread()
         {
             while (PollingActive) PollDevice();
@@ -132,10 +119,6 @@ namespace ControllerToMouse.Devices
         // This should be run within its own thread.
         public void PollDevice() 
         {
-            if (!Controller.IsConnected)
-            {
-                InputDeviceManager.RemoveDevice(Index);
-            }
             if (LastAction.IsRunning == false) LastAction.Start();
 
             Status = Controller.GetState().Gamepad; // updates the status of all buttons/axes

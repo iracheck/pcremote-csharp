@@ -38,6 +38,7 @@ namespace ControllerToMouse.Source.GUI.UserControls
         {
             UpdateConnectionStatus();
             UpdateBatteryStatus();
+            UpdateProfileStatus();
          
         }
 
@@ -64,27 +65,20 @@ namespace ControllerToMouse.Source.GUI.UserControls
         public void UpdateBatteryStatus()
         {
             
-            if (Device.isBatteryPowered)
+            if (Device.IsBatteryPowered)
             {
-                BatteryLevelDisplay.Text = Device.batteryLevel.ToString() + "%";
+                BatteryLevelDisplay.Text = Device.BatteryLevel.ToString() + "%";
             }
             else
             {
-                BatteryLevelDisplay.Text = "N/A";
+                BatteryLevelDisplay.Text = "Wired";
             }
 
         }
 
         public void UpdateProfileStatus()
         {
-            if (Device.isBatteryPowered)
-            {
-                BatteryLevelDisplay.Text = Device.batteryLevel.ToString();
-            }
-            else
-            {
-                BatteryLevelDisplay.Text = "N/A";
-            }
+            CurrentProfileDisplay.Text = Device.ProfileName;
 
         }
     }

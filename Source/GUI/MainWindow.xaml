@@ -1,18 +1,25 @@
 ﻿<Window x:Class="ControllerToMouse.GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Controller to Mouse" Width="900" Height="750" 
+        Title="Controller to Mouse" Width="920" Height="800" 
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Closed="OnExit"
         AllowsTransparency="True"
-        WindowStyle="None">
+        WindowStyle="None"
+        Background="Transparent">
 
     <Border Background="{StaticResource AppBackgroundBrush}"
             BorderBrush="{StaticResource SurfaceBackgroundBrush}"
             
             BorderThickness="2"
+            Margin="20"
             >
+
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="25" ShadowDepth="0" Opacity="0.5"/>
+        </Border.Effect>
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"></RowDefinition>
@@ -26,7 +33,9 @@
                 Grid.Row="0"
                 Background="{StaticResource AppBackgroundBrush}"
                 BorderThickness="0 1 0 0"
-                MouseLeftButtonDown="HeaderMouseButton_Down">
+                MouseLeftButtonDown="HeaderMouseButton_Down"
+                >
+
 
                 <Grid>
                     <Grid.ColumnDefinitions>

@@ -14,7 +14,7 @@ namespace ControllerToMouse.Source.GUI
         public ReloadControllersAction()
         {
             Name = "Reload Devices";
-            Description = "Reload all connected devices immediately.";
+            Description = "Fetch newly connected devices and reload existing ones.";
         }
 
         public override void Activate()

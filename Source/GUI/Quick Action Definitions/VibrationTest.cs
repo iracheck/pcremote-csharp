@@ -24,8 +24,10 @@ namespace ControllerToMouse.Source.GUI
 
                 if (device != null)
                 {
+                    StatusBar.Message("Testing device with index" + i);
                     device.Vibrate();
                 }
+                Thread.Sleep(50);
             }
         }
     }

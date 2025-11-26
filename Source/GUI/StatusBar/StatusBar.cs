@@ -50,7 +50,7 @@ namespace ControllerToMouse.Source.GUI
         /// <param name="length"></param>
         static public void Message(String message)
         {
-            Message(message, 1.5f);
+            Message(message, 2.5f);
         }
 
         static public void Update(object sender, EventArgs e)

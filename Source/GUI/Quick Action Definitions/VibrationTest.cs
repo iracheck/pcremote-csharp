@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ControllerToMouse.Source.GUI
@@ -17,7 +18,15 @@ namespace ControllerToMouse.Source.GUI
 
         public override void Activate()
         {
-            InputDeviceManager.GetDevice(0).Vibrate();
+            for (int i = 0; i < InputDeviceManager.ConnectedDeviceCount(); i++)
+            {
+                InputDevice device = InputDeviceManager.GetDevice(i);
+
+                if (device != null)
+                {
+                    device.Vibrate();
+                }
+            }
         }
     }
 }

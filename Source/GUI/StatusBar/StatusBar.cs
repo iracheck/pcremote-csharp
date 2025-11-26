@@ -67,7 +67,7 @@ namespace ControllerToMouse.Source.GUI
 
             if (!CustomMessageActive)
             {
-                Target.Text = InputDeviceManager.GetDeviceCount() + " device(s) connected.";
+                Target.Text = InputDeviceManager.ConnectedDeviceCount() + " device(s) connected.";
             }
         }
     }

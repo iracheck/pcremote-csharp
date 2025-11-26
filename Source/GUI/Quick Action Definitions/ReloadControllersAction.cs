@@ -20,7 +20,7 @@ namespace ControllerToMouse.Source.GUI
         public override void Activate()
         {
             InputDeviceManager.InitializeDevices();
-            StatusBar.Message("Refreshed all controllers. Found " + InputDeviceManager.GetDeviceCount() + " connected devices.");
+            StatusBar.Message("Refreshed all controllers. Found " + InputDeviceManager.ConnectedDeviceCount() + " connected devices.");
         }
     }
 }

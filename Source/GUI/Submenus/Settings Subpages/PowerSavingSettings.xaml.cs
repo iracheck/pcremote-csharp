@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ControllerToMouse.Source.GUI.Submenus.Settings_Subpages
 {
     /// <summary>
-    /// Interaction logic for AdvancedSettings.xaml
+    /// Interaction logic for General.xaml
     /// </summary>
-    public partial class AdvancedSettings : UserControl
+    public partial class PowerSavingSettings : UserControl
     {
-        public AdvancedSettings()
+        public PowerSavingSettings()
         {
             InitializeComponent();
         }

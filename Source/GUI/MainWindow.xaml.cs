@@ -1,4 +1,6 @@
 ﻿using ControllerToMouse.Devices;
+using ControllerToMouse.Meta;
+using ControllerToMouse.Settings;
 using ControllerToMouse.Source.GUI;
 using ControllerToMouse.Source.GUI.Submenus;
 using SharpDX.XInput;
@@ -28,12 +30,15 @@ namespace ControllerToMouse.GUI
 
         public MainWindow()
         {
-            Trace.WriteLine("Init main window");
-
             InitializeComponent();
 
+            // initialize status bar information
             StatusBar.UpdateInterval = UPDATE_INTERVAL;
             StatusBar.Target = StatusMessage;
+
+            // ensure file directories & load app settings. This will also create them and save default settings if they dont exist
+            FilePaths.EnsureDirectoriesExist();
+            AppSettings.Load();
 
             // Store nav buttons for later reference
             NavButtons = new List<Button>
@@ -105,6 +110,11 @@ namespace ControllerToMouse.GUI
         protected void MinimizeButton_Click(object sender, EventArgs e)
         {
             WindowState = WindowState.Minimized;
+
+            if (AppSettings.AppBehavior.MinimizeToTray)
+            {
+                this.Hide();
+            }
         }
 
         protected void ExitButton_Click(object sender, EventArgs e)

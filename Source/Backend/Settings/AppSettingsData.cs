@@ -14,9 +14,7 @@ namespace ControllerToMouse.Settings
         public GUISettings GUISettings { get; set; } = new();
         public AppBehaviorSettings AppBehaviorSettings { get; set; } = new();
         public BlacklistSettings BlacklistSettings { get; set; } = new();
-
-        // Media Control settings
-        public int AudioStep { get; set; } = 5; // in percentage, 0-100
+        public AudioControlSettings AudioControlSettings { get; set; } = new();
     }
 
     // Properties that deal with controller sleep and system power use.
@@ -47,14 +45,12 @@ namespace ControllerToMouse.Settings
 
     internal class GUISettings
     {
-        public string Theme { get; set; } = "no_theme";
+        public string Theme { get; set; } = "no_theme"; // current avaliable themes: "dark"
     }
 
+    // will (eventually) be migrated onto a per-profile basis
     internal class AudioControlSettings
     {
-        public bool BlacklistEnabled { get; set; } = false;
-        public bool InvertBlacklistToWhitelist { get; set; } = false;
-
-        public List<string> BlacklistedApplications { set; get; } = new List<string>();
+        public int AudioStep { get; set; } = 5; // in percentage, 0-100
     }
 }

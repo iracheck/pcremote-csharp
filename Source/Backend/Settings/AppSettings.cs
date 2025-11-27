@@ -22,6 +22,7 @@ namespace ControllerToMouse.Settings
         public static GUISettings GUI => Data.GUISettings;
         public static AppBehaviorSettings AppBehavior => Data.AppBehaviorSettings;
         public static BlacklistSettings Blacklist => Data.BlacklistSettings;
+        public static AudioControlSettings Audio => Data.AudioControlSettings;
 
         // Returns the data source for App Settings
         public static AppSettingsData Get() {  return Data; }
@@ -56,15 +57,13 @@ namespace ControllerToMouse.Settings
                 catch (Exception e) { Console.WriteLine(e.Message); }
             }
 
-            // If the file does not exist, or the file cannot be read from, it will fallback to default settings.
+            // If the file does not exist, or the file cannot be read from, it will fallback to default settings and then save those settings.
             Console.WriteLine("Failed to retrieve settings, or settings file does not exist. Using default settings...");
             Data = new AppSettingsData();
+            Save();
 
-
-             return;
+            return;
         }
-
-
 
 
 

@@ -39,4 +39,9 @@
     <Resource Include="Resources\Images\battery_high.png" />
     <Resource Include="Resources\Images\xbox_controller.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Source\GUI\Submenus\Settings Subpages\PowerSavingSettings.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

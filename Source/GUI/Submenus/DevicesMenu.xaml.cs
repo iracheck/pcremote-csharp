@@ -95,10 +95,5 @@ namespace ControllerToMouse.Source.GUI.Submenus
         {
             LoadControllers();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

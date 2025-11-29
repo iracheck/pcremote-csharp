@@ -51,7 +51,7 @@ namespace ControllerToMouse.Source.GUI.Submenus
                 }
             }
 
-            if (ControllerCardList.Children.Count != InputDeviceManager.ConnectedDeviceCount())
+            if (ControllerCardList.Children[0].GetType() == typeof(TextBox) || ControllerCardList.Children.Count != InputDeviceManager.ConnectedDeviceCount())
             {
                 LoadControllers();
             }
@@ -62,7 +62,7 @@ namespace ControllerToMouse.Source.GUI.Submenus
             ControllerCardList.Children.Clear();
             InputDeviceManager.InitializeDevices();
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < InputDeviceManager.MAX_CONTROLLERS; i++)
             {
                 ControllerToMouse.Devices.InputDevice device = InputDeviceManager.GetDevice(i);
 
@@ -73,6 +73,15 @@ namespace ControllerToMouse.Source.GUI.Submenus
 
                     ControllerCardList.Children.Add(card);
                 }
+            }
+
+            if (ControllerCardList.Children.Count == 0)
+            {
+                TextBlock txt = new TextBlock();
+
+                txt.Text = "Please connect an Input device to get started.";
+                txt.HorizontalAlignment = HorizontalAlignment.Center;
+                ControllerCardList.Children.Add(txt);
             }
         }
 

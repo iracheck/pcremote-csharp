@@ -18,11 +18,16 @@ namespace ControllerToMouse.Source.GUI.Submenus.Settings_Subpages
     /// <summary>
     /// Interaction logic for General.xaml
     /// </summary>
-    public partial class PowerSavingSettings : UserControl
+    partial class PowerSavingSettings : UserControl
     {
         public PowerSavingSettings()
         {
             InitializeComponent();
+        }
+
+        private void NumbersOnlyTextbox(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !e.Text.All(char.IsDigit);
         }
     }
 }

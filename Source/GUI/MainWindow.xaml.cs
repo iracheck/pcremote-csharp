@@ -54,18 +54,23 @@ namespace ControllerToMouse.GUI
             // set version number to Meta.BuildInfo's stored value
             VersionNumber.Text = "v" + Meta.BuildInfo.Version;
 
+            SetupUpdateTimer();
+
+            StatusBar.Message("Welcome to PCRemote!");
+        }
+
+        void SetupUpdateTimer()
+        {
             // Initialize the global timer that the program works with:
             UpdateTimer.Interval = TimeSpan.FromMilliseconds(100);
 
-                // the timer handles multiple things: most important of which is to update all of the devices on demand
+            // the timer handles multiple things: most important of which is to update all of the devices on demand
             UpdateTimer.Tick += DeviceMenu.UpdateTimer_Tick;
 
-                // update the status box, too.
+            // update the status box, too.
             UpdateTimer.Tick += StatusBar.Update;
 
             UpdateTimer.Start();
-
-            StatusBar.Message("Test");
         }
 
         protected void MenuButtonClick(object sender, EventArgs e)
@@ -100,7 +105,6 @@ namespace ControllerToMouse.GUI
             }
         }
 
-
         // Header
         protected void HeaderMouseButton_Down(object sender, EventArgs e)
         {
@@ -121,7 +125,6 @@ namespace ControllerToMouse.GUI
         {
             Application.Current.Shutdown();
         }
-
 
         // Generic Listeners
         protected void OnExit(object sender, EventArgs e)

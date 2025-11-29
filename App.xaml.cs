@@ -18,6 +18,8 @@ namespace ControllerToMouse
         {
             base.OnStartup(e);
 
+            // note: MainWindow.cs will also immediately happen! Frontend logic is mostly there, while backend logic is here.
+
             // Ensure all program directories exist in %appdata%
             FilePaths.EnsureDirectoriesExist();
 
@@ -25,7 +27,7 @@ namespace ControllerToMouse
             AppSettings.Load();
             AppSettings.Save();
 
-            // Get any connected USB devices
+            // Get any connected xinput devices
             InputDeviceManager.InitializeDevices();
         }
 

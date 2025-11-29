@@ -10,50 +10,16 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="20">
 
-            <TextBlock Style="{StaticResource Header1Style}" Margin="0 0 0 20">Power Saving Settings</TextBlock>
+            <TextBlock Style="{StaticResource Header1Style}" Margin="0 0 0 20">Device Polling Settings</TextBlock>
 
             <!-- ============================================== -->
-            <!-- GROUP 1:  -->
-            <!-- ============================================== -->
-            <Border>
-                <StackPanel>
-                    <TextBlock Style="{StaticResource Header2Style}" Margin="0 0 0 10">Sleep Mode</TextBlock>
-
-                    <!-- Setting: Theme Selection -->
-                    <Grid Margin="0 5 0 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Application Theme" />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Choose the visual appearance of the application." />
-                        </StackPanel>
-
-                        <!-- Theme Control -->
-                        <ComboBox Grid.Column="1" Width="150" HorizontalAlignment="Right">
-                            <ComboBoxItem Content="Dark (Default)"/>
-                            <ComboBoxItem Content="Light"/>
-                            <ComboBoxItem Content="System Default"/>
-                        </ComboBox>
-                    </Grid>
-
-                </StackPanel>
-
-
-            </Border>
-
-
-
-            <!-- ============================================== -->
-            <!-- GROUP 2: APPLICATION BEHAVIOR -->
+            <!-- GROUP 1: POLLING SPEED -->
             <!-- ============================================== -->
             <Border>
                 <StackPanel>
-                    <TextBlock Style="{StaticResource Header2Style}" Margin="0 20 0 10">App Behavior</TextBlock>
+                    <TextBlock Style="{StaticResource Header2Style}" Margin="0 0 0 10">Polling Speed</TextBlock>
 
-                    <!-- Setting: Open on Startup -->
+                    <!-- Setting: Polling Speed -->
                     <Grid Margin="0 5 0 15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -61,46 +27,106 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Launch on System Startup" />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Automatically start the application when you log into Windows." />
+                            <TextBlock Text="Polling Speed" />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="The default rate of polling when not in sleep or battery saving modes." />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=PollingSlider, Path=Value, Converter={StaticResource msToHz}, StringFormat='Current: {0} hz'}"/>
                         </StackPanel>
 
-                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="StartUpCheckbox"/>
-                    </Grid>
-
-                    <!-- Setting: Minimize to Tray -->
-                    <Grid Margin="0 0 0 15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Minimize to System Tray" />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Hides the application window to the tray instead of the taskbar when minimizing or closing." />
-                        </StackPanel>
-
-                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="MinimizeCheckbox"/>
-                    </Grid>
-
-                    <!-- Setting: Check for Updates -->
-                    <Grid Margin="0 0 0 15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Check for Updates" />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Automatically check for new application versions on launch." />
-                        </StackPanel>
-
-                        <!-- Checkbox for CheckForUpdates -->
-                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="CheckForUpdatesCheckbox"/>
+                        <!-- Slider Control -->
+                        <Slider x:Name="PollingSlider" Grid.Column="1" Minimum="1" Maximum="20" Value="5" Width="150" VerticalAlignment="Center"/>
                     </Grid>
 
                 </StackPanel>
             </Border>
+
+            <!-- ============================================== -->
+            <!-- GROUP 2: SLEEP SETTINGS -->
+            <!-- ============================================== -->
+            <Border>
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Header2Style}" Margin="0 0 0 10">Sleep Mode</TextBlock>
+
+                    <!-- Setting: Enable Sleep Mode -->
+                    <Grid Margin="0 5 0 15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Enable Controller Sleep" />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Automatically poll inactive controllers at a lower rate." />
+                        </StackPanel>
+
+                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="SleepModeCheckbox"/>
+                    </Grid>
+
+                    <!-- Setting: Polling Speed -->
+                    <Grid Margin="0 5 0 15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Sleep Polling Speed" />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="After a certain period of inactivity, resort to a lower polling rate to conserve energy." />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=SleepPollingSlider, Path=Value, Converter={StaticResource msToHz}, StringFormat='Current: {0} hz'}"/>
+                        </StackPanel>
+
+                        <!-- Slider Control -->
+                        <Slider x:Name="SleepPollingSlider" Grid.Column="1" Minimum="10" Maximum="40" Value="40" Width="150" VerticalAlignment="Center"/>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+
+            <!-- ============================================== -->
+            <!-- GROUP 3: BATTERY SAVER SETTINGS -->
+            <!-- ============================================== -->
+            <Border>
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Header2Style}" Margin="0 0 0 10">Battery Saver Mode</TextBlock>
+
+                    <!-- Setting: Enable Battery Saver -->
+                    <Grid Margin="0 5 0 15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Battery Saver Mode" />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Run at a lower poll rate when on low battery or in Battery Saver mode." />
+                        </StackPanel>
+
+                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="BatterySaverCheckbox"/>
+                    </Grid>
+
+                    <StackPanel>
+
+                        <!-- Setting: Polling Speed -->
+                        <Grid Margin="0 5 0 15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Battery Saver Polling Speed" />
+                                <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="The rate of polling in Battery Saving mode." />
+                                <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=PowerSaverPollingSpeed, Path=Value, Converter={StaticResource msToHz}, StringFormat='Current: {0} hz'}"/>
+                            </StackPanel>
+
+                            <!-- Slider Control -->
+                            <Slider x:Name="PowerSaverPollingSpeed" Grid.Column="1" Minimum="20" Maximum="500" Value="100" Width="150" VerticalAlignment="Center"/>
+                        </Grid>
+
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -91,7 +91,7 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Check for Updates" />
+                            <TextBlock Text="Check for Updates (Unfinished)" />
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Automatically check for new application versions on launch." />
                         </StackPanel>
 
@@ -119,10 +119,11 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Controller Volume Step" />
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="The percentage amount volume changes when using the controller's audio input." />
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=VolumeStepSlider, Path=Value, StringFormat='Current: {0}%'}"/>
                         </StackPanel>
 
                         <!-- Slider Control -->
-                        <Slider Grid.Column="1" Minimum="1" Maximum="20" Value="5" Width="150" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Minimum="1" Maximum="20" Value="5" Width="150" x:Name="VolumeStepSlider" VerticalAlignment="Center"/>
                     </Grid>
                 </StackPanel>
 

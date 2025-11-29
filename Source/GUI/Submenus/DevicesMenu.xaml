@@ -13,8 +13,8 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column ="0" Margin="10 20 10 10">
-            <TextBlock Style="{StaticResource Header2Style}">Connected Devices</TextBlock>
+        <StackPanel Grid.Column ="0" Margin="10 0 10 10">
+            <TextBlock Style="{StaticResource Header1Style}">Connected Devices</TextBlock>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="ControllerCardList" Orientation="Vertical"/>

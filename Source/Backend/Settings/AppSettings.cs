@@ -44,6 +44,24 @@ namespace ControllerToMouse.Settings
             }
         }
 
+        public static void SaveFromObject(AppSettingsData newData)
+        {
+            try
+            {
+                string serializedJson = JsonSerializer.Serialize(newData, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+                File.WriteAllText(FilePath, serializedJson);
+
+                Load(); // load for safety
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There was an error saving AppSettingsData to json. Error Message: " + e.Message);
+            }
+        }
+
         public static void Load()
         {
             if (File.Exists(FilePath))

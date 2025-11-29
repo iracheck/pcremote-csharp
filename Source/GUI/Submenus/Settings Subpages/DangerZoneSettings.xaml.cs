@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControllerToMouse.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,14 @@ namespace ControllerToMouse.Source.GUI.Submenus.Settings_Subpages
         public DangerZoneSettings()
         {
             InitializeComponent();
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            AppSettingsData data = new();
+            data.SleepSettings.BatterySaverEnabled = false;
+
+            AppSettings.SaveFromObject(data);
         }
     }
 }

@@ -7,6 +7,37 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <!-- 1. ScrollViewer wraps all content to enable scrolling if the window is small -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20">
+
+                <TextBlock Style="{StaticResource Header1Style}" Margin="0 0 0 20">Danger Zone Settings</TextBlock>
+
+                <!-- ============================================== -->
+                <!-- GROUP 1: RESET DATA -->
+                <!-- ============================================== -->
+                <Border BorderBrush="{StaticResource WarningTextBrush}">
+                    <StackPanel>
+                        <!-- Setting: Reset Settings Files -->
+                        <Grid Margin="0 5 0 15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Reset All Data" />
+                                <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Resets all settings to the default shipped configuration." />
+                            </StackPanel>
+
+                            <Button Grid.Column="1" Width="150" Click="ResetButton_Click" Style="{StaticResource AccentButtonStyle}">Test</Button>
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

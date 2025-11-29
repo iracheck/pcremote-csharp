@@ -12,6 +12,8 @@
         <SolidColorBrush x:Key="PrimaryTextBrush" Color="#F1F1F1"/>
         <SolidColorBrush x:Key="SecondaryTextBrush" Color="#ADADAD"/>
 
+        <SolidColorBrush x:Key="WarningTextBrush" Color="#ff0f0f"/>
+
         <SolidColorBrush x:Key="AccentBrush" Color="#007ACC"/>
 
         <Style x:Key="AccentButtonStyle" TargetType="{x:Type Button}">

@@ -11,12 +11,12 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="20">
 
-                <TextBlock Style="{StaticResource Header1Style}" Margin="0 0 0 20">Danger Zone Settings</TextBlock>
+                <TextBlock Style="{StaticResource Header1Style}" Margin="0 0 0 20" Foreground="{StaticResource WarningTextBrush}">Danger Zone Settings</TextBlock>
 
                 <!-- ============================================== -->
                 <!-- GROUP 1: RESET DATA -->
                 <!-- ============================================== -->
-                <Border BorderBrush="{StaticResource WarningTextBrush}">
+                <Border>
                     <StackPanel>
                         <!-- Setting: Reset Settings Files -->
                         <Grid Margin="0 5 0 15">
@@ -30,7 +30,7 @@
                                 <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Resets all settings to the default shipped configuration." />
                             </StackPanel>
 
-                            <Button Grid.Column="1" Width="150" Click="ResetButton_Click" Style="{StaticResource AccentButtonStyle}">Test</Button>
+                            <Button Grid.Column="1" Width="150" Click="ResetButton_Click" Style="{StaticResource SurfaceButtonStyle}">Reset</Button>
                         </Grid>
 
                     </StackPanel>

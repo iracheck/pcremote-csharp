@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,15 @@ namespace ControllerToMouse.Source.GUI.Submenus.Settings_Subpages
         public ProgramInfo()
         {
             InitializeComponent();
+
+            CurrentVersionBox.Text = "Current Version: v" + Meta.BuildInfo.Version;
+            BuildDateBox.Text = "Built on " + Meta.BuildInfo.BuildDate;
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            e.Handled = true;
         }
     }
 }

@@ -12,19 +12,26 @@ namespace ControllerToMouse.Source.Utils
         static String StartupAppsPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
 
 
-        public static void AddToStartup()
+        public static void AddApplicationToStartup()
         {
-            
+            if (!CheckIsAutoStartup())
+            {
+                String exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                File.Copy(exePath, Path.Combine(StartupAppsPath, "PCRemote.exe"));
+            }
         }
 
-        public static void RemoveFromStartup()
+        public static void RemoveApplicationFromStartup()
         {
-
+            if (CheckIsAutoStartup())
+            {
+                File.Delete(Path.Combine(StartupAppsPath, "PCRemote.exe"));
+            }
         }
 
-        public static void CheckIsAutoStartup()
+        public static bool CheckIsAutoStartup()
         {
-            File.Exists(Path.Combine(StartupAppsPath, "PCRemote.exe"));
+            return File.Exists(Path.Combine(StartupAppsPath, "PCRemote.exe"));
         }
     }
 }

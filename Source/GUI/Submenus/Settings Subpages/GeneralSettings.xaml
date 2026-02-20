@@ -32,7 +32,7 @@
                         </StackPanel>
 
                         <!-- Theme Control -->
-                        <ComboBox Grid.Column="1" Width="150" HorizontalAlignment="Right">
+                        <ComboBox Grid.Column="1" Width="150" HorizontalAlignment="Right" x:Name="ThemeBox" SelectionChanged="ThemeBox_SelectionChanged">
                             <ComboBoxItem Content="Dark (Default)"/>
                             <ComboBoxItem Content="Light"/>
                             <ComboBoxItem Content="System Default"/>
@@ -65,7 +65,7 @@
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Automatically start the application when you log into Windows." />
                         </StackPanel>
 
-                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="StartUpCheckbox"/>
+                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="StartUpCheckbox" Checked="StartUpCheckbox_Changed" Unchecked="StartUpCheckbox_Changed"/>
                     </Grid>
 
                     <!-- Setting: Minimize to Tray -->
@@ -80,7 +80,7 @@
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="Hides the application window to the tray instead of the taskbar when minimizing or closing." />
                         </StackPanel>
 
-                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="MinimizeCheckbox"/>
+                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="MinimizeCheckbox" Checked="MinimizeCheckbox_Changed" Unchecked="MinimizeCheckbox_Changed"/>
                     </Grid>
 
                     <!-- Setting: Check for Updates -->
@@ -96,7 +96,7 @@
                         </StackPanel>
 
                         <!-- Checkbox for CheckForUpdates -->
-                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="CheckForUpdatesCheckbox"/>
+                        <CheckBox Grid.Column="1" VerticalAlignment="Center" x:Name="CheckForUpdatesCheckbox" Checked="CheckForUpdatesCheckbox_Changed" Unchecked="CheckForUpdatesCheckbox_Changed"/>
                     </Grid>
 
                 </StackPanel>
@@ -119,11 +119,11 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Controller Volume Step" />
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="The percentage amount volume changes when using the controller's audio input." />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=VolumeStepSlider, Path=Value, StringFormat='Current: {0}%'}"/>
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=VolumeStepSlider, Path=Value, Converter={StaticResource Percentage}, StringFormat='Current: {0}%'}"/>
                         </StackPanel>
 
                         <!-- Slider Control -->
-                        <Slider Grid.Column="1" Minimum="1" Maximum="20" Value="5" Width="150" x:Name="VolumeStepSlider" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Minimum="1" Maximum="20" Value="5" Width="150" x:Name="VolumeStepSlider" VerticalAlignment="Center" ValueChanged="VolumeStepSlider_ValueChanged"/>
                     </Grid>
                 </StackPanel>
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using System.Text.Json;
 using ControllerToMouse.Meta;
+using ControllerToMouse.Source.Utils;
 
 namespace ControllerToMouse.Settings
 {
@@ -79,6 +80,19 @@ namespace ControllerToMouse.Settings
             Console.WriteLine("Failed to retrieve settings, or settings file does not exist. Using default settings...");
             Data = new AppSettingsData();
             Save();
+
+
+            // Below are a few special checks for things that might exist outside of the program, e.g. "open on startup" info.
+
+            // Open on startup check
+            if (AppBehavior.OpenOnStartup)
+            {
+                StartupUtils.AddApplicationToStartup();
+            }
+            else
+            {
+                StartupUtils.RemoveApplicationFromStartup();
+            }
 
             return;
         }

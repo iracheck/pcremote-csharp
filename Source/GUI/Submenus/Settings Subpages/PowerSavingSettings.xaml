@@ -29,7 +29,7 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Polling Speed" />
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="The default rate of polling when not in sleep or battery saving modes." />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=PollingSlider, Path=Value, Converter={StaticResource msToHz}, StringFormat='Current: {0} hz'}"/>
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=PollingSlider, Path=Value, Converter={StaticResource MsToHz}, StringFormat='Current: {0} hz'}"/>
                         </StackPanel>
 
                         <!-- Slider Control -->
@@ -71,7 +71,7 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Sleep Polling Speed" />
                             <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="After a certain period of inactivity, resort to a lower polling rate to conserve energy." />
-                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=SleepPollingSlider, Path=Value, Converter={StaticResource msToHz}, StringFormat='Current: {0} hz'}"/>
+                            <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=SleepPollingSlider, Path=Value, Converter={StaticResource MsToHz}, StringFormat='Current: {0} hz'}"/>
                         </StackPanel>
 
                         <!-- Slider Control -->
@@ -115,7 +115,7 @@
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Battery Saver Polling Speed" />
                                 <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="The rate of polling in Battery Saving mode." />
-                                <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=PowerSaverPollingSpeed, Path=Value, Converter={StaticResource msToHz}, StringFormat='Current: {0} hz'}"/>
+                                <TextBlock Style="{StaticResource SecondaryTextStyle}" Text="{Binding ElementName=PowerSaverPollingSpeed, Path=Value, Converter={StaticResource MsToHz}, StringFormat='Current: {0} hz'}"/>
                             </StackPanel>
 
                             <!-- Slider Control -->

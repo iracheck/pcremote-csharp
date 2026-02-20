@@ -1,33 +1,33 @@
 ﻿<UserControl x:Class="ControllerToMouse.Source.GUI.UserControls.QuickAction"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="350">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Button Click="OnClick" HorizontalContentAlignment="Stretch" Cursor="Hand" Margin="0,0,0,10">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="MainBorder" 
+                            Background="{StaticResource SurfaceBackgroundBrush}" 
+                            CornerRadius="8" Padding="15,12" BorderThickness="1">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background" Value="#3D3D42"/>
+                            <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
 
-    <Border 
-            CornerRadius="6" 
-            Padding="10" 
-            Margin="0,0,0,10"
-            Style="{StaticResource HoverableBorderPanel}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="ActionName" Text="Action Name"
+                           Style="{StaticResource TextBlockBaseStyle}"
+                           FontSize="15" FontWeight="Bold" Margin="0,0,0,2"/>
 
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" MouseLeftButtonDown="OnClick">
-
-                <TextBlock Style="{StaticResource TextBlockBaseStyle}" Text="Action Name" x:Name="ActionName"
-               FontSize="14" FontWeight="SemiBold" Margin="-1,0,0,0" TextTrimming="CharacterEllipsis"/>
-
-                <TextBlock Text="Action Description" x:Name="ActionDescription"
-               FontSize="10" Style="{StaticResource SmallTextStyle}"/>
-
+                <TextBlock x:Name="ActionDescription" Text="Action Description"
+                           Style="{StaticResource SmallTextStyle}"
+                           FontSize="11" TextWrapping="Wrap" Opacity="0.7"/>
             </StackPanel>
-
-        </Grid>
-    </Border>
+        </Button>
+    </Grid>
 </UserControl>

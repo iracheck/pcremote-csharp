@@ -11,3 +11,6 @@ Intended for workflow, gaming, media center, or accessibility purposes.
 - Persistent settings saving in JSON
 - Multi-Controller Support (Up to 4 XInput devices)
 - Multi-Threaded Controllers + Main Thread
+
+__NOTE__:
+Project is currently shuttered. While its far from complete, it does everything I need it to and I never intended for it to be a commercialized application. I will definitely revisit it in the future when I have more time on my hands.
